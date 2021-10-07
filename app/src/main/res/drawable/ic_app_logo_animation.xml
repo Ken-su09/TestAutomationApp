@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/ic_automation"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation1"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation2"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation3"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation4"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation5"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation6"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation7"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation8"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation9"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation10"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation11"
+        android:duration="75" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/ic_automation14"
+        android:duration="150" />
+</animation-list>
