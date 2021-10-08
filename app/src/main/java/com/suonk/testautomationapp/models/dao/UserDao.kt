@@ -1,6 +1,7 @@
 package com.suonk.testautomationapp.models.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.suonk.testautomationapp.models.data.User
@@ -14,6 +15,12 @@ interface UserDao {
      */
     @Query("SELECT * FROM user_db")
     fun getUser(): Flow<User>
+
+    /**
+     * addNewUser(user)
+     */
+    @Insert
+    suspend fun addNewUser(user: User)
 
     /**
      * updateUser(user)
