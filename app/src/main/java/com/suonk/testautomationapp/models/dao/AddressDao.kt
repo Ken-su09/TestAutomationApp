@@ -2,6 +2,7 @@ package com.suonk.testautomationapp.models.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
 import com.suonk.testautomationapp.models.data.Address
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,10 @@ interface AddressDao {
      */
     @Query("SELECT * FROM address_db")
     fun getAddress(): Flow<Address>
+
+    /**
+     * updateAddress(address)
+     */
+    @Update
+    suspend fun updateAddress(address: Address)
 }

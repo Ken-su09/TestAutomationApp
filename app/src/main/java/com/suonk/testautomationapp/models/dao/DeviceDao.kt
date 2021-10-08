@@ -23,17 +23,17 @@ interface DeviceDao {
      * updateDevice(device)
      */
     @Update
-    fun updateDevice(device: Device)
+    suspend fun updateDevice(device: Device)
 
     /**
      * deleteDevice(device)
      */
     @Delete
-    fun deleteDevice(device: Device)
+    suspend fun deleteDevice(device: Device)
 
     /**
      * addNewDevice(device)
      */
     @Insert
-    fun addNewDevice(device: Device)
+    suspend fun addNewDevice(device: Device)
 }
