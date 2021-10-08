@@ -8,9 +8,7 @@ import com.suonk.testautomationapp.models.AppDatabase
 import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
 import com.suonk.testautomationapp.models.dao.UserDao
-import com.suonk.testautomationapp.models.data.Address
-import com.suonk.testautomationapp.models.data.Device
-import com.suonk.testautomationapp.models.data.User
+import com.suonk.testautomationapp.models.data.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -88,146 +86,101 @@ class AppModule {
                     //region ======================================== Devices =======================================
 
                     deviceDao.apply {
-                        // 1
-                        addNewDevice(
-                            Device(
+
+                        // Light
+                        addNewLight(
+                            Light(
                                 "Lampe - Cuisine",
-                                50,
-                                "ON",
-                                null,
                                 "Light",
-                                null
+                                50,
+                                "ON"
+                            )
+                        )
+                        addNewLight(
+                            Light(
+                                "Lampe - Salon",
+                                "Light",
+                                100,
+                                "ON"
+                            )
+                        )
+                        addNewLight(
+                            Light(
+                                "Lampe - Salle de bain",
+                                "Light",
+                                36,
+                                "ON"
+                            )
+                        )
+                        addNewLight(
+                            Light(
+                                "Lampe - Grenier",
+                                "Light",
+                                0,
+                                "ON"
                             )
                         )
 
-                        // 2
-                        addNewDevice(
-                            Device(
+                        // Roller Shutter
+                        addNewRollerShutter(
+                            RollerShutter(
                                 "Volet roulant - Salon",
-                                null,
-                                null,
-                                70,
                                 "RollerShutter",
-                                null
+                                70
+                            )
+                        )
+                        addNewRollerShutter(
+                            RollerShutter(
+                                "Volet roulant",
+                                "RollerShutter",
+                                0
+                            )
+                        )
+                        addNewRollerShutter(
+                            RollerShutter(
+                                "Volet roulant - Salle de bain",
+                                "RollerShutter",
+                                70
+                            )
+                        )
+                        addNewRollerShutter(
+                            RollerShutter(
+                                "Volet roulant",
+                                "RollerShutter",
+                                33
                             )
                         )
 
-                        // 3
-                        addNewDevice(
-                            Device(
+                        // Heater
+                        addNewHeater(
+                            Heater(
                                 "Radiateur - Chambre",
-                                null,
-                                "OFF",
-                                null,
                                 "Heater",
+                                "OFF",
                                 20
                             )
                         )
-
-                        // 4
-                        addNewDevice(
-                            Device(
-                                "Lampe - Salon",
-                                100,
-                                "ON",
-                                null,
-                                "Light",
-                                null
-                            )
-                        )
-
-                        // 5
-                        addNewDevice(
-                            Device(
-                                "Volet roulant",
-                                null,
-                                null,
-                                0,
-                                "RollerShutter",
-                                null
-                            )
-                        )
-
-                        // 6
-                        addNewDevice(
-                            Device(
+                        addNewHeater(
+                            Heater(
                                 "Radiateur - Salon",
-                                null,
-                                "OFF",
-                                null,
                                 "Heater",
+                                "OFF",
                                 18
                             )
                         )
-
-                        // 7
-                        addNewDevice(
-                            Device(
-                                "Lampe - Grenier",
-                                0,
-                                "ON",
-                                null,
-                                "Light",
-                                null
-                            )
-                        )
-
-                        // 8
-                        addNewDevice(
-                            Device(
-                                "Volet roulant - Salle de bain",
-                                null,
-                                null,
-                                70,
-                                "RollerShutter",
-                                null
-                            )
-                        )
-
-                        // 9
-                        addNewDevice(
-                            Device(
+                        addNewHeater(
+                            Heater(
                                 "Radiateur - Salle de bain",
-                                null,
-                                "OFF",
-                                null,
                                 "Heater",
+                                "OFF",
                                 20
                             )
                         )
-
-                        // 10
-                        addNewDevice(
-                            Device(
-                                "Lampe - Salle de bain",
-                                36,
-                                "ON",
-                                null,
-                                "Light",
-                                null
-                            )
-                        )
-
-                        // 11
-                        addNewDevice(
-                            Device(
-                                "Volet roulant",
-                                null,
-                                null,
-                                33,
-                                "RollerShutter",
-                                null
-                            )
-                        )
-
-                        // 12
-                        addNewDevice(
-                            Device(
+                        addNewHeater(
+                            Heater(
                                 "Radiateur - WC",
-                                null,
-                                "ON",
-                                null,
                                 "Heater",
+                                "ON",
                                 19
                             )
                         )

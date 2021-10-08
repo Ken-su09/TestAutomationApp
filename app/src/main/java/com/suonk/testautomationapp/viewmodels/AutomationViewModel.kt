@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.suonk.testautomationapp.models.data.Address
-import com.suonk.testautomationapp.models.data.Device
 import com.suonk.testautomationapp.models.data.User
 import com.suonk.testautomationapp.repositories.AutomationAppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

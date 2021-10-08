@@ -5,7 +5,6 @@ import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
 import com.suonk.testautomationapp.models.dao.UserDao
 import com.suonk.testautomationapp.models.data.Address
-import com.suonk.testautomationapp.models.data.Device
 import com.suonk.testautomationapp.models.data.User
 import javax.inject.Inject
 
