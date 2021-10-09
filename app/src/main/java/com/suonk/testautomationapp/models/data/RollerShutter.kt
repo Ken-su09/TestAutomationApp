@@ -1,8 +1,10 @@
 package com.suonk.testautomationapp.models.data
 
+import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.suonk.testautomationapp.R
 
 @Entity(tableName = "roller_shutter_db")
 data class RollerShutter(
@@ -12,6 +14,9 @@ data class RollerShutter(
     override val productType: String,
     @ColumnInfo(name = "position")
     val position: Int,
+    @ColumnInfo(name = "deviceIcon")
+    override val deviceIcon: Int =
+        R.drawable.ic_roller_shutter_door,
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) : Device() {

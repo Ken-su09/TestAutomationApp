@@ -1,8 +1,10 @@
 package com.suonk.testautomationapp.models.data
 
+import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.suonk.testautomationapp.R
 
 @Entity(tableName = "light_db")
 data class Light(
@@ -14,6 +16,9 @@ data class Light(
     val intensity: Int,
     @ColumnInfo(name = "mode")
     val mode: String,
+    @ColumnInfo(name = "deviceIcon")
+    override val deviceIcon: Int =
+        R.drawable.ic_light,
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) : Device()

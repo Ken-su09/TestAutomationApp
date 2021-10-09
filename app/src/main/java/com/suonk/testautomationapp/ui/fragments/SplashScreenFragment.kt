@@ -38,7 +38,7 @@ class SplashScreenFragment : Fragment() {
         binding?.appName?.startAnimation(animation)
 
         CoroutineScope(Dispatchers.Main).launch {
-            delay(2500)
+            delay(2750)
             navController.navigate(R.id.action_splashScreenFragment_to_mainFragment)
             frameAnimation.stop()
         }

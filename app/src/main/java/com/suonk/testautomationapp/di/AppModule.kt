@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.models.AppDatabase
 import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
@@ -65,13 +66,7 @@ class AppModule {
                     )
                     userDao.addNewUser(
                         User(
-                            Address(
-                                "Issy-les-Moulineaux",
-                                "France",
-                                92130,
-                                "rue Michelet",
-                                "2B"
-                            ),
+                            1,
                             813766371000,
                             "John",
                             "Doe",

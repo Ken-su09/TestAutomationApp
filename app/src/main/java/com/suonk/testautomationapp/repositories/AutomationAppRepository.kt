@@ -4,8 +4,7 @@ import androidx.annotation.WorkerThread
 import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
 import com.suonk.testautomationapp.models.dao.UserDao
-import com.suonk.testautomationapp.models.data.Address
-import com.suonk.testautomationapp.models.data.User
+import com.suonk.testautomationapp.models.data.*
 import javax.inject.Inject
 
 class AutomationAppRepository @Inject constructor(
@@ -16,43 +15,39 @@ class AutomationAppRepository @Inject constructor(
 
     //region ============================================ Devices ===========================================
 
-    val allDevices = deviceDao.getAllDevices()
-    fun getDeviceByName(deviceName: String) = deviceDao.getDeviceByDeviceName(deviceName)
+    val allLights = deviceDao.getAllLights()
+    val allHeaters = deviceDao.getAllHeaters()
+    val allRollerShutters = deviceDao.getAllRollerShutters()
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun addNewDevice(device: Device) {
-        deviceDao.addNewDevice(device)
-    }
+    fun getLightByName(name: String) = deviceDao.getLightByDeviceName(name)
+    fun getHeaterByName(name: String) = deviceDao.getHeaterByDeviceName(name)
+    fun getRollerShutterByName(name: String) = deviceDao.getRollerShutterByDeviceName(name)
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun updateDevice(device: Device) {
-        deviceDao.updateDevice(device)
-    }
+    suspend fun addNewLight(light: Light) = deviceDao.addNewLight(light)
+    suspend fun addNewHeater(heater: Heater) = deviceDao.addNewHeater(heater)
+    suspend fun addNewRollerShutter(rs: RollerShutter) = deviceDao.addNewRollerShutter(rs)
 
-    @WorkerThread
-    suspend fun deleteDevice(device: Device) {
-        deviceDao.deleteDevice(device)
-    }
+    suspend fun updateLight(light: Light) = deviceDao.updateLight(light)
+    suspend fun updateHeater(heater: Heater) = deviceDao.updateHeater(heater)
+    suspend fun updateRollerShutter(rs: RollerShutter) = deviceDao.updateRollerShutter(rs)
+
+    suspend fun deleteLight(light: Light) = deviceDao.deleteLight(light)
+    suspend fun deleteHeater(heater: Heater) = deviceDao.deleteHeater(heater)
+    suspend fun deleteRollerShutter(rs: RollerShutter) = deviceDao.deleteRollerShutter(rs)
 
     //endregion
 
-    //region ============================================= User =============================================
+    //region ======================================= User and Address =======================================
 
     val user = userDao.getUser()
+    val address = addressDao.getAddress()
+    fun userAndAddressWithAddressId(id: Int) = userDao.getUserAndAddressWithAddressId(id)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun updateUser(user: User) {
         userDao.updateUser(user)
     }
-
-    //endregion
-
-    //region ============================================ Address ===========================================
-
-    val address = addressDao.getAddress()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

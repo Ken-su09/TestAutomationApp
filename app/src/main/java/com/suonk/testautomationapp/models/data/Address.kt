@@ -2,6 +2,7 @@ package com.suonk.testautomationapp.models.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "address_db")
 data class Address(
@@ -14,5 +15,7 @@ data class Address(
     @ColumnInfo(name = "street")
     val street: String,
     @ColumnInfo(name = "streetCode")
-    val streetCode: String
+    val streetCode: String,
+    @ColumnInfo(name = "addressId") @PrimaryKey(autoGenerate = false)
+    val addressId: Int = 1
 )
