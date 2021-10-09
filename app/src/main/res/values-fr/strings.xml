@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">TestAutomationApp</string>
+
+    <string name="user_name_title">NOM</string>
+    <string name="user_email_title">ADRESSE E-MAIL</string>
+    <string name="user_phone_number">NUMÉRO DE TÉLÉPHONE</string>
+    <string name="none">None</string>
+    <string name="user_birth_date">DATE D`\ANNIVERSAIRE</string>
+    <string name="user_address">ADRESSE</string>
+    <string name="user_city">VILLE</string>
+    <string name="user_country">PAYS</string>
 </resources>

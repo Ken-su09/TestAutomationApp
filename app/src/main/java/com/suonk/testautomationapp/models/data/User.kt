@@ -3,11 +3,12 @@ package com.suonk.testautomationapp.models.data
 import android.graphics.Bitmap
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_db")
 data class User(
-    @ColumnInfo(name = "address")
-    val address: Address,
+    @ColumnInfo(name = "addressId")
+    val addressId: Int,
     @ColumnInfo(name = "birthDate")
     val birthDate: Long,
     @ColumnInfo(name = "firstName")
@@ -19,6 +20,8 @@ data class User(
     @ColumnInfo(name = "phoneNumber")
     val phoneNumber: String,
     @ColumnInfo(name = "email")
-    val email: String
+    val email: String,
+    @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
 
 )
