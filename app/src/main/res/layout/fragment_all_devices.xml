@@ -10,31 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:background="@drawable/custom_edit_text_background"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/ic_search" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/search_device_edit_text"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/transparent"
-                android:paddingStart="40dp"
-                android:paddingEnd="5dp"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_search" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/search_device_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="25dp"
+                    android:background="@color/transparent"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="@color/white" />
+
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/device_recycler_view"
@@ -43,7 +49,7 @@
             android:layout_margin="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            tools:listitem="@layout/item_device"/>
+            tools:listitem="@layout/item_device" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

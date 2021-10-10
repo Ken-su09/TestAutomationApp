@@ -82,9 +82,24 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
 
     //region ==================================== Data Between Fragments ====================================
 
-    val searchBarText = MutableLiveData<String>()
-    fun setSearchBarText(text: String) {
-        searchBarText.value = text
+    val productType = MutableLiveData<String>()
+    fun setProductType(pt: String) {
+        productType.value = pt
+    }
+
+    val light = MutableLiveData<Light>()
+    fun setLight(l: Light) {
+        light.value = l
+    }
+
+    val rollerShutter = MutableLiveData<RollerShutter>()
+    fun setRollerShutter(rs: RollerShutter) {
+        rollerShutter.value = rs
+    }
+
+    val heater = MutableLiveData<Heater>()
+    fun setHeater(h: Heater) {
+        heater.value = h
     }
 
     //endregion

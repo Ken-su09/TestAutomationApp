@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.google.android.material.tabs.TabLayoutMediator
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentMainBinding
@@ -14,7 +16,11 @@ import com.suonk.testautomationapp.ui.adapters.ViewPagerAdapter
 
 class MainFragment : Fragment() {
 
+    //region ========================================== Val or Var ==========================================
+
     private var binding: FragmentMainBinding? = null
+
+    //endregion
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +30,8 @@ class MainFragment : Fragment() {
         initializeUI()
         return binding?.root
     }
+
+    //region ============================================== UI ==============================================
 
     private fun initializeUI() {
         setupViewPager()
@@ -47,6 +55,8 @@ class MainFragment : Fragment() {
             }
         }.attach()
     }
+
+    //endregion
 
     override fun onDestroyView() {
         super.onDestroyView()

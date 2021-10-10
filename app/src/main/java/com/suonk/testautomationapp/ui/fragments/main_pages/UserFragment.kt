@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentUserBinding
 import com.suonk.testautomationapp.ui.activity.MainActivity
@@ -16,8 +18,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class UserFragment : Fragment() {
 
+    //region ========================================== Val or Var ==========================================
+
     private var binding: FragmentUserBinding? = null
     private val viewModel: AutomationViewModel by activityViewModels()
+
+    //endregion
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +34,13 @@ class UserFragment : Fragment() {
         return binding?.root
     }
 
+    //region ============================================== UI ==============================================
+
     private fun initializeUI() {
         getUserFromDatabase()
     }
+
+    //endregion
 
     private fun getUserFromDatabase() {
         viewModel.userAndAddress(1).observe(viewLifecycleOwner, { userAndAddress ->
