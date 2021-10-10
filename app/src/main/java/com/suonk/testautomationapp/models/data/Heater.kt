@@ -16,9 +16,6 @@ data class Heater(
     val mode: String,
     @ColumnInfo(name = "temperature")
     val temperature: Int,
-    @ColumnInfo(name = "deviceIcon")
-    override val deviceIcon: Int =
-        R.drawable.ic_heater,
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) : Device()

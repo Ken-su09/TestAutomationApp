@@ -9,7 +9,10 @@
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_automation12.xml" value="0.221875" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_automation14.xml" value="0.221875" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_left_arrow.xml" value="0.221875" />
+        <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_roller_shutter.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_search.xml" value="0.38333333333333336" />
+        <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/ic_sort.xml" value="0.38333333333333336" />
+        <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/item_background_selector.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/drawable/tab_icon_selector.xml" value="0.38333333333333336" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/layout/activity_main.xml" value="0.3671875" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/layout/fragment_all_devices.xml" value="0.35260416666666666" />
@@ -17,6 +20,7 @@
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/layout/fragment_splash_screen.xml" value="0.3020833333333333" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/layout/fragment_user.xml" value="0.33" />
         <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/layout/item_device.xml" value="0.3671875" />
+        <entry key="..\:/Users/CompteDev/AndroidStudioProjects/TestAutomationApp/app/src/main/res/menu/devices_toolbar_menu.xml" value="0.3671875" />
       </map>
     </option>
   </component>

@@ -184,6 +184,7 @@ class AppModule {
                     //endregion
                 }
             })
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides

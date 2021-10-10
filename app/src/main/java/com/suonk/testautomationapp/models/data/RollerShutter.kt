@@ -14,9 +14,6 @@ data class RollerShutter(
     override val productType: String,
     @ColumnInfo(name = "position")
     val position: Int,
-    @ColumnInfo(name = "deviceIcon")
-    override val deviceIcon: Int =
-        R.drawable.ic_roller_shutter_door,
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) : Device() {

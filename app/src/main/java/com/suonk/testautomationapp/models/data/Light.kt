@@ -16,9 +16,6 @@ data class Light(
     val intensity: Int,
     @ColumnInfo(name = "mode")
     val mode: String,
-    @ColumnInfo(name = "deviceIcon")
-    override val deviceIcon: Int =
-        R.drawable.ic_light,
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 ) : Device()

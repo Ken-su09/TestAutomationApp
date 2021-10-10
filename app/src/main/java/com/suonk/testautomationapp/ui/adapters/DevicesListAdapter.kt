@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,17 +33,38 @@ class DevicesListAdapter(private val activity: Activity) :
         fun onBind(device: Device) {
 
             Log.i("deviceData", "${device.deviceName}")
-            Log.i("deviceData", "${device.deviceIcon}")
 
             binding.deviceName.text = device.deviceName
 
-            binding.deviceIcon.setImageDrawable(
-                ResourcesCompat.getDrawable(
-                    activity.resources,
-                    device.deviceIcon,
-                    null
-                )
-            )
+            when (device.productType) {
+                "Light" -> {
+                    binding.deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            activity.resources,
+                            R.drawable.ic_light,
+                            null
+                        )
+                    )
+                }
+                "RollerShutter" -> {
+                    binding.deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            activity.resources,
+                            R.drawable.ic_roller_shutter,
+                            null
+                        )
+                    )
+                }
+                "Heater" -> {
+                    binding.deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            activity.resources,
+                            R.drawable.ic_heater,
+                            null
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -54,8 +74,7 @@ class DevicesListAdapter(private val activity: Activity) :
         }
 
         override fun areContentsTheSame(oldItem: Device, newItem: Device): Boolean {
-            return oldItem.deviceIcon == newItem.deviceIcon &&
-                    oldItem.deviceName == newItem.deviceName &&
+            return oldItem.deviceName == newItem.deviceName &&
                     oldItem.productType == newItem.productType
         }
     }

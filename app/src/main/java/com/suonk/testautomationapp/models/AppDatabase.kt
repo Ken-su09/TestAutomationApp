@@ -11,7 +11,7 @@ import com.suonk.testautomationapp.utils.Converters
 
 @Database(
     entities = [User::class, Address::class, Light::class, RollerShutter::class, Heater::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
