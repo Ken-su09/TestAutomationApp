@@ -9,14 +9,41 @@
         android:id="@+id/splashScreenFragment"
         android:name="com.suonk.testautomationapp.ui.fragments.SplashScreenFragment"
         android:label="fragment_splash_screen"
-        tools:layout="@layout/fragment_splash_screen" >
+        tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.suonk.testautomationapp.ui.fragments.MainFragment"
+        android:name="com.suonk.testautomationapp.ui.fragments.main_pages.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_deviceDetailsFragment"
+            app:destination="@id/deviceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_mainFragment_to_editUserDetailsFragment"
+            app:destination="@id/editUserDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/deviceDetailsFragment"
+        android:name="com.suonk.testautomationapp.ui.fragments.DeviceDetailsFragment"
+        android:label="fragment_device_details"
+        tools:layout="@layout/fragment_device_details" />
+    <fragment
+        android:id="@+id/editUserDetailsFragment"
+        android:name="com.suonk.testautomationapp.ui.fragments.EditUserDetailsFragment"
+        android:label="fragment_edit_user_details"
+        tools:layout="@layout/fragment_edit_user_details" />
 </navigation>

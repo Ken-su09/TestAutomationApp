@@ -5,14 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.ItemDeviceBinding
 import com.suonk.testautomationapp.models.data.Device
+import com.suonk.testautomationapp.ui.fragments.main_pages.AllDevicesFragment
 
-class DevicesListAdapter(private val activity: Activity) :
+class DevicesListAdapter(private val activity: Activity, private val fragment: Fragment) :
     ListAdapter<Device, DevicesListAdapter.ViewHolder>(DevicesComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,14 +25,14 @@ class DevicesListAdapter(private val activity: Activity) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = getItem(position)
         Log.i("deviceData", "$device")
-        holder.onBind(device)
+        holder.onBind(device, position)
     }
 
     inner class ViewHolder(
         private val binding: ItemDeviceBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun onBind(device: Device) {
+        fun onBind(device: Device, position: Int) {
 
             Log.i("deviceData", "${device.deviceName}")
 
@@ -64,6 +66,10 @@ class DevicesListAdapter(private val activity: Activity) :
                         )
                     )
                 }
+            }
+
+            binding.root.setOnClickListener {
+                (fragment as AllDevicesFragment).navigateToDeviceDetails(position)
             }
         }
     }

@@ -9,4 +9,10 @@
     <string name="user_address">ADRESSE</string>
     <string name="user_city">VILLE</string>
     <string name="user_country">PAYS</string>
+
+    <string name="sort_by_product_type">Tri par type de produit</string>
+    <string name="sort_by_device_name">Tri par nom de l\`appareil</string>
+    <string name="only_light">Seulement les lumières</string>
+    <string name="only_heaters">Seulement les chauffages</string>
+    <string name="only_roller_shutter">Seulement les Volets roulants</string>
 </resources>

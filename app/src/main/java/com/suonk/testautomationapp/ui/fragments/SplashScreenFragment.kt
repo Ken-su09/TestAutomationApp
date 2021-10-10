@@ -12,6 +12,8 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentSplashScreenBinding
+import com.suonk.testautomationapp.ui.activity.MainActivity
+import com.suonk.testautomationapp.ui.fragments.main_pages.MainFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,13 +23,13 @@ import kotlinx.coroutines.launch
 class SplashScreenFragment : Fragment() {
 
     private var binding: FragmentSplashScreenBinding? = null
-    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSplashScreenBinding.inflate(inflater, container, false)
+        appLogoAnimation()
         return binding?.root
     }
 
@@ -39,15 +41,9 @@ class SplashScreenFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(2750)
-            navController.navigate(R.id.action_splashScreenFragment_to_mainFragment)
+            (activity as MainActivity).startMainScreen()
             frameAnimation.stop()
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(view)
-        appLogoAnimation()
     }
 
     override fun onDestroyView() {

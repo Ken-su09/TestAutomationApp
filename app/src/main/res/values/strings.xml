@@ -9,4 +9,10 @@
     <string name="user_address">ADDRESS</string>
     <string name="user_city">CITY</string>
     <string name="user_country">COUNTRY</string>
+
+    <string name="sort_by_product_type">Sort by product type</string>
+    <string name="sort_by_device_name">Sort by device name</string>
+    <string name="only_light">Only Lights</string>
+    <string name="only_heaters">Only Heaters</string>
+    <string name="only_roller_shutter">Only Roller Shutter</string>
 </resources>
