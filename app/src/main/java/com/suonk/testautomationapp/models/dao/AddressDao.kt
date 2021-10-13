@@ -1,9 +1,6 @@
 package com.suonk.testautomationapp.models.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.suonk.testautomationapp.models.data.Address
 import kotlinx.coroutines.flow.Flow
 
@@ -19,7 +16,7 @@ interface AddressDao {
     /**
      * addNewAddress(address)
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewAddress(address: Address)
 
     /**

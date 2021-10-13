@@ -1,19 +1,26 @@
 package com.suonk.testautomationapp.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentSplashScreenBinding
 import com.suonk.testautomationapp.ui.activity.MainActivity
 import com.suonk.testautomationapp.ui.fragments.main_pages.MainFragment
+import com.suonk.testautomationapp.viewmodels.AutomationViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,8 +36,12 @@ class SplashScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSplashScreenBinding.inflate(inflater, container, false)
-        appLogoAnimation()
+        initializeUI()
         return binding?.root
+    }
+
+    private fun initializeUI() {
+        appLogoAnimation()
     }
 
     private fun appLogoAnimation() {

@@ -19,14 +19,6 @@ class AutomationAppRepository @Inject constructor(
     val allHeaters = deviceDao.getAllHeaters()
     val allRollerShutters = deviceDao.getAllRollerShutters()
 
-    fun getLightByName(name: String) = deviceDao.getLightByDeviceName(name)
-    fun getHeaterByName(name: String) = deviceDao.getHeaterByDeviceName(name)
-    fun getRollerShutterByName(name: String) = deviceDao.getRollerShutterByDeviceName(name)
-
-    suspend fun addNewLight(light: Light) = deviceDao.addNewLight(light)
-    suspend fun addNewHeater(heater: Heater) = deviceDao.addNewHeater(heater)
-    suspend fun addNewRollerShutter(rs: RollerShutter) = deviceDao.addNewRollerShutter(rs)
-
     suspend fun updateLight(light: Light) = deviceDao.updateLight(light)
     suspend fun updateHeater(heater: Heater) = deviceDao.updateHeater(heater)
     suspend fun updateRollerShutter(rs: RollerShutter) = deviceDao.updateRollerShutter(rs)
@@ -41,7 +33,6 @@ class AutomationAppRepository @Inject constructor(
 
     val user = userDao.getUser()
     val address = addressDao.getAddress()
-    fun userAndAddressWithAddressId(id: Int) = userDao.getUserAndAddressWithAddressId(id)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

@@ -21,43 +21,27 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
     val allHeaters = repository.allHeaters.asLiveData()
     val allRollerShutters = repository.allRollerShutters.asLiveData()
 
-    fun getLightByName(name: String) = repository.getLightByName(name).asLiveData()
-    fun getHeaterByName(name: String) = repository.getHeaterByName(name).asLiveData()
-    fun getRollerShutterByName(name: String) = repository.getRollerShutterByName(name).asLiveData()
-
-    suspend fun addNewLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
-        repository.addNewLight(light)
-    }
-
-    suspend fun addNewHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
-        repository.addNewHeater(heater)
-    }
-
-    suspend fun addNewRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
-        repository.addNewRollerShutter(rs)
-    }
-
-    suspend fun updateLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateLight(light)
     }
 
-    suspend fun updateHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateHeater(heater)
     }
 
-    suspend fun updateRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateRollerShutter(rs)
     }
 
-    suspend fun deleteLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteLight(light)
     }
 
-    suspend fun deleteHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteHeater(heater)
     }
 
-    suspend fun deleteRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteRollerShutter(rs)
     }
 
@@ -67,8 +51,6 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
 
     val user = repository.user.asLiveData()
     val address = repository.address.asLiveData()
-
-    fun userAndAddress(id: Int) = repository.userAndAddressWithAddressId(id).asLiveData()
 
     fun updateUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateUser(user)

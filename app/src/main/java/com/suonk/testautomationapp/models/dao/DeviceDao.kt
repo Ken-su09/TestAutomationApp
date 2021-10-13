@@ -18,12 +18,6 @@ interface DeviceDao {
     fun getAllHeaters(): Flow<List<Heater>>
 
     /**
-     * getHeaterByDeviceName(name) = device1
-     */
-    @Query("SELECT * FROM heater_db WHERE deviceName == :name")
-    fun getHeaterByDeviceName(name: String): Flow<Heater>
-
-    /**
      * updateHeater(heater)
      */
     @Update
@@ -38,7 +32,7 @@ interface DeviceDao {
     /**
      * addNewHeater(heater)
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewHeater(heater: Heater)
 
     //endregion
@@ -50,12 +44,6 @@ interface DeviceDao {
      */
     @Query("SELECT * FROM light_db ORDER BY deviceName ASC")
     fun getAllLights(): Flow<List<Light>>
-
-    /**
-     * getLightByDeviceName(name) = device1
-     */
-    @Query("SELECT * FROM light_db WHERE deviceName == :name")
-    fun getLightByDeviceName(name: String): Flow<Light>
 
     /**
      * updateLight(light)
@@ -72,8 +60,14 @@ interface DeviceDao {
     /**
      * addNewLight(light)
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewLight(light: Light)
+
+    /**
+     * insertAllLights(lights)
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllLights(lights: List<Light>)
 
     //endregion
 
@@ -84,12 +78,6 @@ interface DeviceDao {
      */
     @Query("SELECT * FROM roller_shutter_db ORDER BY deviceName ASC")
     fun getAllRollerShutters(): Flow<List<RollerShutter>>
-
-    /**
-     * getRollerShutterByDeviceName(name) = device1
-     */
-    @Query("SELECT * FROM roller_shutter_db WHERE deviceName == :name")
-    fun getRollerShutterByDeviceName(name: String): Flow<RollerShutter>
 
     /**
      * updateRollerShutter(rollerShutter)
@@ -106,7 +94,7 @@ interface DeviceDao {
     /**
      * addNewRollerShutter(rollerShutter)
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewRollerShutter(rollerShutter: RollerShutter)
 
     //endregion
