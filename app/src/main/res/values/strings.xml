@@ -18,4 +18,6 @@
     <string name="check_if_fields_empty">Fields should not be empty</string>
     <string name="email_is_not_valid">Email is not valid</string>
     <string name="postal_code_is_not_valid">Le code postal n`\est pas valide</string>
+    <string name="intensity_device">\"Intensité : \"</string>
+    <string name="temperature_device">"Temperature : "</string>
 </resources>

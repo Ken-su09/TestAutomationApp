@@ -1,11 +1,18 @@
 package com.suonk.testautomationapp.ui.fragments
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.SeekBar
+import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.suonk.testautomationapp.R
@@ -20,7 +27,7 @@ class DeviceDetailsFragment : Fragment() {
     private val viewModel: AutomationViewModel by activityViewModels()
     private var binding: FragmentDeviceDetailsBinding? = null
 
-    private lateinit var sharedPreferences: SharedPreferences
+    private var productT = ""
 
     //endregion
 
@@ -33,42 +40,213 @@ class DeviceDetailsFragment : Fragment() {
         return binding?.root
     }
 
-    private fun initializeUI() {
-        binding?.intensityLight?.min = 0
-        binding?.intensityLight?.max = 100
-        getDeviceFromViewModel()
+    //region ============================================== UI ==============================================
 
-//        binding?.intensityLight?.setOnScrollChangeListener(object : View)
+    private fun initializeUI() {
+        getDeviceFromViewModel()
+        deviceModeSwitchListener()
+        deviceSeekBarChangeListener()
     }
+
+    //endregion
+
+    //region =========================================== Listeners ==========================================
+
+    private fun deviceModeSwitchListener() {
+        binding?.deviceMode?.setOnCheckedChangeListener { _, isChecked ->
+            when (productT) {
+                "Light" -> {
+                    if (isChecked) {
+                        binding?.deviceIcon?.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                (activity as MainActivity).resources,
+                                R.drawable.ic_light,
+                                null
+                            )
+                        )
+                    } else {
+                        binding?.deviceIcon?.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                (activity as MainActivity).resources,
+                                R.drawable.ic_light_off,
+                                null
+                            )
+                        )
+                    }
+                }
+                "Heater" -> {
+                    if (isChecked) {
+                        binding?.apply {
+                            if (dataDeviceSeekBar.progress.toDouble() != 0.0) {
+                                checkSeekBarTemperatureProgression(dataDeviceSeekBar.progress.toDouble() / 2.0)
+                            }
+                            Log.i(
+                                "progressHeaterSeekBar",
+                                "SeekBar Progress Double : ${dataDeviceSeekBar.progress.toDouble()}"
+                            )
+                        }
+                    } else {
+                        binding?.deviceIcon?.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                (activity as MainActivity).resources,
+                                R.drawable.ic_heater_off,
+                                null
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deviceSeekBarChangeListener() {
+        binding?.dataDeviceSeekBar?.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    when (productT) {
+                        "Light" -> {
+                            binding?.intensityTemperatureDeviceValue?.text =
+                                getString(R.string.intensity_device) +
+                                        seekBar?.progress
+                        }
+                        "Heater" -> {
+                            binding?.apply {
+                                val progressHeaterSeekBar =
+                                    dataDeviceSeekBar.progress.toDouble().div(2.0)
+                                Log.i(
+                                    "progressHeaterSeekBar",
+                                    "SeekBar Progress Double : $progressHeaterSeekBar"
+                                )
+
+                                if (deviceMode.isChecked) {
+                                    when {
+                                        progressHeaterSeekBar < 14.0 -> {
+                                            deviceIcon.setImageDrawable(
+                                                ResourcesCompat.getDrawable(
+                                                    (activity as MainActivity).resources,
+                                                    R.drawable.ic_heater_cold,
+                                                    null
+                                                )
+                                            )
+                                        }
+                                        progressHeaterSeekBar >= 14.0 && progressHeaterSeekBar < 22.0 -> {
+                                            deviceIcon.setImageDrawable(
+                                                ResourcesCompat.getDrawable(
+                                                    (activity as MainActivity).resources,
+                                                    R.drawable.ic_heater,
+                                                    null
+                                                )
+                                            )
+                                        }
+                                        else -> {
+                                            deviceIcon.setImageDrawable(
+                                                ResourcesCompat.getDrawable(
+                                                    (activity as MainActivity).resources,
+                                                    R.drawable.ic_heater_hot,
+                                                    null
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+
+                                intensityTemperatureDeviceValue.text =
+                                    getString(R.string.temperature_device) +
+                                            progressHeaterSeekBar + "°C"
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+    }
+
+    private fun saveDeviceClick() {
+
+    }
+
+    //endregion
+
+    private fun checkSeekBarTemperatureProgression(temperature: Double) {
+        binding?.apply {
+            when {
+                temperature < 14.0 -> {
+                    deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            (activity as MainActivity).resources,
+                            R.drawable.ic_heater_cold,
+                            null
+                        )
+                    )
+                }
+                temperature >= 14.0 && temperature < 22.0 -> {
+                    deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            (activity as MainActivity).resources,
+                            R.drawable.ic_heater,
+                            null
+                        )
+                    )
+                }
+                else -> {
+                    deviceIcon.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            (activity as MainActivity).resources,
+                            R.drawable.ic_heater_hot,
+                            null
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    //region ==================================== getDeviceFromViewModel ====================================
 
     private fun getDeviceFromViewModel() {
         viewModel.apply {
             productType.observe(viewLifecycleOwner, { productType ->
+                productT = productType
                 when (productType) {
                     "Light" -> {
                         light.observe(viewLifecycleOwner, { light ->
-                            if (light.mode == "ON") {
-                                binding?.deviceIcon?.setImageDrawable(
-                                    ResourcesCompat.getDrawable(
-                                        (activity as MainActivity).resources,
-                                        R.drawable.ic_light,
-                                        null
+                            binding?.apply {
+                                if (light.mode == "ON") {
+                                    deviceIcon.setImageDrawable(
+                                        ResourcesCompat.getDrawable(
+                                            (activity as MainActivity).resources,
+                                            R.drawable.ic_light,
+                                            null
+                                        )
                                     )
-                                )
-                                binding?.deviceSwitch?.isChecked = true
-                            } else {
-                                binding?.deviceIcon?.setImageDrawable(
-                                    ResourcesCompat.getDrawable(
-                                        (activity as MainActivity).resources,
-                                        R.drawable.ic_light_off,
-                                        null
+                                    deviceMode.isChecked = true
+                                } else {
+                                    deviceIcon.setImageDrawable(
+                                        ResourcesCompat.getDrawable(
+                                            (activity as MainActivity).resources,
+                                            R.drawable.ic_light_off,
+                                            null
+                                        )
                                     )
-                                )
-                                binding?.deviceSwitch?.isChecked = false
+                                    deviceMode.isChecked = false
+                                }
+
+                                dataDeviceSeekBar.apply {
+                                    progress = light.intensity
+                                    min = 0
+                                    max = 100
+                                    incrementProgressBy(1)
+                                }
+                                intensityTemperatureDeviceValue.text =
+                                    getString(R.string.intensity_device) + light.intensity
                             }
-                            binding?.intensityLight?.progress = light.intensity
-                            binding?.intensityLightValue?.text =
-                                "${binding?.intensityLight?.progress}"
                         })
                     }
                     "RollerShutter" -> {
@@ -80,28 +258,38 @@ class DeviceDetailsFragment : Fragment() {
                                     null
                                 )
                             )
+
+                            binding?.deviceMode?.isVisible = false
                         })
                     }
                     "Heater" -> {
                         heater.observe(viewLifecycleOwner, { heater ->
-                            if (heater.mode == "ON") {
-                                binding?.deviceIcon?.setImageDrawable(
-                                    ResourcesCompat.getDrawable(
-                                        (activity as MainActivity).resources,
-                                        R.drawable.ic_heater,
-                                        null
+                            binding?.apply {
+                                if (heater.mode == "ON") {
+                                    checkSeekBarTemperatureProgression(heater.temperature.toDouble())
+                                    deviceMode.isChecked = true
+                                } else {
+                                    checkSeekBarTemperatureProgression(heater.temperature.toDouble())
+                                    deviceIcon.setImageDrawable(
+                                        ResourcesCompat.getDrawable(
+                                            (activity as MainActivity).resources,
+                                            R.drawable.ic_heater_off,
+                                            null
+                                        )
                                     )
-                                )
-                                binding?.deviceSwitch?.isChecked = true
-                            } else {
-                                binding?.deviceIcon?.setImageDrawable(
-                                    ResourcesCompat.getDrawable(
-                                        (activity as MainActivity).resources,
-                                        R.drawable.ic_heater,
-                                        null
-                                    )
-                                )
-                                binding?.deviceSwitch?.isChecked = false
+                                    deviceMode.isChecked = false
+                                }
+
+                                intensityTemperatureDeviceValue.text =
+                                    getString(R.string.temperature_device) +
+                                            heater.temperature.toDouble() + "°C"
+
+                                dataDeviceSeekBar.apply {
+                                    progress = heater.temperature * 2
+                                    min = 14
+                                    max = 56
+                                    incrementProgressBy(1)
+                                }
                             }
                         })
                     }
@@ -109,6 +297,8 @@ class DeviceDetailsFragment : Fragment() {
             })
         }
     }
+
+    //endregion
 
     override fun onDestroyView() {
         super.onDestroyView()
