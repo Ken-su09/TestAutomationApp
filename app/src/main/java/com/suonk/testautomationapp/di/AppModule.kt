@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.suonk.testautomationapp.models.AppDatabase
-import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
 import com.suonk.testautomationapp.models.dao.UserDao
 import com.suonk.testautomationapp.models.data.*
@@ -28,8 +27,7 @@ class AppModule {
     fun provideAppDatabase(
         @ApplicationContext context: Context,
         userDaoProvider: Provider<UserDao>,
-        deviceDaoProvider: Provider<DeviceDao>,
-        addressDaoProvider: Provider<AddressDao>
+        deviceDaoProvider: Provider<DeviceDao>
     ) =
         Room.databaseBuilder(
             context, AppDatabase::class.java, "app_database"
@@ -40,8 +38,7 @@ class AppModule {
                     CoroutineScope(Dispatchers.IO).launch {
                         prePopulateDatabase(
                             userDaoProvider.get(),
-                            deviceDaoProvider.get(),
-                            addressDaoProvider.get()
+                            deviceDaoProvider.get()
                         )
                     }
                 }
@@ -52,23 +49,19 @@ class AppModule {
 
                 private suspend fun prePopulateDatabase(
                     userDao: UserDao,
-                    deviceDao: DeviceDao,
-                    addressDao: AddressDao
+                    deviceDao: DeviceDao
                 ) {
                     //region ===================================== User =====================================
 
-                    addressDao.addNewAddress(
-                        Address(
-                            "Issy-les-Moulineaux",
-                            "France",
-                            92130,
-                            "rue Michelet",
-                            "2B"
-                        )
-                    )
                     userDao.addNewUser(
                         User(
-                            1,
+                            Address(
+                                "Issy-les-Moulineaux",
+                                "France",
+                                92130,
+                                "rue Michelet",
+                                "2B"
+                            ),
                             813766371000,
                             "John",
                             "Doe",
@@ -82,7 +75,13 @@ class AppModule {
                     Log.i(
                         "prePopulateDatabase", "${
                             User(
-                                1,
+                                Address(
+                                    "Issy-les-Moulineaux",
+                                    "France",
+                                    92130,
+                                    "rue Michelet",
+                                    "2B"
+                                ),
                                 813766371000,
                                 "John",
                                 "Doe",
@@ -222,7 +221,4 @@ class AppModule {
 
     @Provides
     fun provideDeviceDao(database: AppDatabase) = database.deviceDao()
-
-    @Provides
-    fun provideAddressDao(database: AppDatabase) = database.addressDao()
 }

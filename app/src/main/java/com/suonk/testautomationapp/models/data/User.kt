@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_db")
 data class User(
-    @ColumnInfo(name = "addressId")
-    val addressId: Int,
+    @ColumnInfo(name = "address")
+    val address: Address,
     @ColumnInfo(name = "birthDate")
     val birthDate: Long,
     @ColumnInfo(name = "firstName")

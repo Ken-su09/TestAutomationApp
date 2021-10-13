@@ -50,14 +50,9 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
     //region ======================================= User and Address =======================================
 
     val user = repository.user.asLiveData()
-    val address = repository.address.asLiveData()
 
     fun updateUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateUser(user)
-    }
-
-    fun updateAddress(address: Address) = viewModelScope.launch(Dispatchers.IO) {
-        repository.updateAddress(address)
     }
 
     //endregion

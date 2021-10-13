@@ -63,17 +63,11 @@ class UserFragment : Fragment() {
                     if (user.img != null) {
                         userImage.setImageBitmap(user.img)
                     }
-                }
-            }
-        })
 
-        viewModel.address.observe(viewLifecycleOwner, { address ->
-            if (address != null) {
-                binding?.apply {
                     userAddressValue.text =
-                        "${address.streetCode} ${address.street}, ${address.postalCode}"
-                    userCityValue.text = address.city
-                    userCountryValue.text = address.country
+                        "${user.address.streetCode} ${user.address.street}, ${user.address.postalCode}"
+                    userCityValue.text = user.address.city
+                    userCountryValue.text = user.address.country
                 }
             }
         })

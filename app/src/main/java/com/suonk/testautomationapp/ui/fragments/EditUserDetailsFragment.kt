@@ -75,24 +75,19 @@ class EditUserDetailsFragment : Fragment() {
                     if (checkPostalCode()) {
                         viewModel.updateUser(
                             User(
-                                1,
+                                Address(
+                                    binding?.userCityValue?.text?.toString()!!,
+                                    binding?.userCountryValue?.text?.toString()!!,
+                                    binding?.userPostalCodeValue?.text?.toString()?.toInt()!!,
+                                    binding?.userAddressValue?.text?.toString()!!,
+                                    "",
+                                ),
                                 binding?.userBirthDateValue?.text?.toString()?.toLong()!!,
                                 binding?.userNameValue?.text?.toString()!!,
                                 binding?.userLastNameValue?.text?.toString()!!,
                                 binding?.userImage?.drawable?.toBitmap(),
                                 binding?.userPhoneNumberValue?.text?.toString()!!,
                                 binding?.userEmailValue?.text?.toString()!!,
-                                1
-                            )
-                        )
-
-                        viewModel.updateAddress(
-                            Address(
-                                binding?.userCityValue?.text?.toString()!!,
-                                binding?.userCountryValue?.text?.toString()!!,
-                                binding?.userPostalCodeValue?.text?.toString()?.toInt()!!,
-                                binding?.userAddressValue?.text?.toString()!!,
-                                "",
                                 1
                             )
                         )
@@ -231,6 +226,8 @@ class EditUserDetailsFragment : Fragment() {
     private fun getUserFromDatabase() {
         viewModel.user.observe(viewLifecycleOwner, { user ->
             currentUser = user
+            currentAddress = user.address
+
             binding?.apply {
                 userNameValue.setText(user.firstName)
                 userLastNameValue.setText(user.lastName)
@@ -242,16 +239,11 @@ class EditUserDetailsFragment : Fragment() {
                 if (user.img != null) {
                     userImage.setImageBitmap(user.img)
                 }
-            }
-        })
 
-        viewModel.address.observe(viewLifecycleOwner, { address ->
-            currentAddress = address
-            binding?.apply {
-                userAddressValue.setText("${address.streetCode} ${address.street}")
-                userPostalCodeValue.setText("${address.postalCode}")
-                userCityValue.setText(address.city)
-                userCountryValue.setText(address.country)
+                userAddressValue.setText("${user.address.streetCode} ${user.address.street}")
+                userPostalCodeValue.setText("${user.address.postalCode}")
+                userCityValue.setText(user.address.city)
+                userCountryValue.setText(user.address.country)
             }
         })
     }
