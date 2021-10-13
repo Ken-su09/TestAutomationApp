@@ -41,7 +41,7 @@ class SplashScreenFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(2750)
-            (activity as MainActivity).startMainScreen()
+            (activity as MainActivity)?.startMainScreen()
             frameAnimation.stop()
         }
     }

@@ -38,11 +38,38 @@ class UserFragment : Fragment() {
 
     private fun initializeUI() {
         getUserFromDatabase()
+        clickToEditUser()
+    }
+
+    private fun clickToEditUser() {
+        binding?.editUserIcon?.setOnClickListener {
+            (activity as MainActivity).startEditUserDetails()
+        }
     }
 
     //endregion
 
     private fun getUserFromDatabase() {
+        viewModel.user.observe(viewLifecycleOwner, { user ->
+            binding?.apply {
+                userNameValue.text = "${user.firstName} ${user.lastName}"
+                userEmailValue.text = user.email
+                userPhoneNumberValue.text = user.phoneNumber
+                userEmailValue.text = user.email
+                userBirthDateValue.text = user.birthDate.toString()
+                userEmailValue.text = user.email
+            }
+        })
+
+        viewModel.address.observe(viewLifecycleOwner, { address ->
+            binding?.apply {
+                userAddressValue.text =
+                    "${address.streetCode} ${address.street}, ${address.postalCode}"
+                userCityValue.text = address.city
+                userCountryValue.text = address.country
+            }
+        })
+
         viewModel.userAndAddress(1).observe(viewLifecycleOwner, { userAndAddress ->
             val user = userAndAddress.user
             val address = userAndAddress.address
@@ -55,7 +82,8 @@ class UserFragment : Fragment() {
                 userBirthDateValue.text = user.birthDate.toString()
                 userEmailValue.text = user.email
 
-                userAddressValue.text = "${address.streetCode} ${address.street}, ${address.postalCode}"
+                userAddressValue.text =
+                    "${address.streetCode} ${address.street}, ${address.postalCode}"
                 userCityValue.text = address.city
                 userCountryValue.text = address.country
             }

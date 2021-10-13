@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/custom_background"
-    tools:context=".ui.fragments.main_pages.UserFragment">
+    tools:context=".ui.fragments.EditUserDetailsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,13 +16,13 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/edit_user_icon"
+                android:id="@+id/save_user_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_edit" />
+                app:srcCompat="@drawable/ic_save" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_image"
@@ -59,15 +59,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_name_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:inputType="textPersonName"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/view"
                 app:layout_constraintStart_toStartOf="@+id/user_name_title"
+                app:layout_constraintTop_toBottomOf="@+id/user_name_title"
+                tools:text="Eleanor Pena" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0.5dp"
+                android:layout_height="0.5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/user_name_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/user_name_value" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/user_last_name_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:inputType="textPersonName"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/view"
                 app:layout_constraintTop_toBottomOf="@+id/user_name_title"
                 tools:text="Eleanor Pena" />
 
@@ -83,18 +110,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_name_value" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/user_email_value"
+            <RelativeLayout
+                android:id="@+id/user_email_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/none"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_marginStart="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_email_title"
-                app:layout_constraintTop_toBottomOf="@+id/user_email_title"
-                tools:text="elenpe@gmail.com" />
+                app:layout_constraintTop_toBottomOf="@+id/user_email_title">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/user_email_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transparent"
+                    android:inputType="textEmailAddress"
+                    android:paddingEnd="25dp"
+                    android:text="@string/none"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="elenpe@gmail.com" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/login_email_validation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="35dp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_check_email" />
+            </RelativeLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/user_phone_number_title"
@@ -106,17 +154,20 @@
                 android:textColor="@color/grey"
                 android:textStyle="italic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_email_value" />
+                app:layout_constraintTop_toBottomOf="@+id/user_email_layout" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_phone_number_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:inputType="number"
                 android:text="@string/none"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_phone_number_title"
                 app:layout_constraintTop_toBottomOf="@+id/user_phone_number_title"
                 tools:text="(209) 555-0104" />
@@ -133,15 +184,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_phone_number_value" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_birth_date_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:inputType="number"
                 android:text="@string/none"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_birth_date_title"
                 app:layout_constraintTop_toBottomOf="@+id/user_birth_date_title"
                 tools:text="813766371000" />
@@ -158,18 +212,47 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_birth_date_value" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_address_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@color/transparent"
                 android:text="@string/none"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_address_title"
                 app:layout_constraintTop_toBottomOf="@+id/user_address_title"
-                tools:text="2B rue Michelet, 92130" />
+                tools:text="2B rue Michelet" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0.5dp"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="50dp"
+                app:layout_constraintBottom_toBottomOf="@+id/user_address_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/user_address_value" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/user_postal_code_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:inputType="number"
+                android:maxLength="5"
+                android:text="@string/none"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/view2"
+                app:layout_constraintTop_toBottomOf="@+id/user_address_title"
+                tools:text="92130" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/user_city_title"
@@ -183,15 +266,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_address_value" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_city_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:background="@color/transparent"
                 android:text="@string/none"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_city_title"
                 app:layout_constraintTop_toBottomOf="@+id/user_city_title"
                 tools:text="Issy-les-Moulineaux" />
@@ -208,18 +293,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_city_value" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/user_country_value"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="France"
+                android:background="@color/transparent"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/user_country_title"
                 app:layout_constraintTop_toBottomOf="@+id/user_country_title"
-                tools:text="Issy-les-Moulineaux" />
+                tools:text="France" />
 
             <View
                 android:layout_width="0.5dp"

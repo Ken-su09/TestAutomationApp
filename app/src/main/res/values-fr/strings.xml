@@ -15,4 +15,7 @@
     <string name="only_light">Seulement les lumières</string>
     <string name="only_heaters">Seulement les chauffages</string>
     <string name="only_roller_shutter">Seulement les Volets roulants</string>
+    <string name="check_if_fields_empty">Les champs ne doivent pas être vides</string>
+    <string name="email_is_not_valid">L`\email n`\est pas valide</string>
+    <string name="postal_code_is_not_valid">Postal Code is not valid</string>
 </resources>
