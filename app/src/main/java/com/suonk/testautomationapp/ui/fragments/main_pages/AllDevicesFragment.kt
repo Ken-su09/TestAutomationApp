@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -28,10 +29,7 @@ import com.suonk.testautomationapp.ui.activity.MainActivity
 import com.suonk.testautomationapp.ui.adapters.DevicesListAdapter
 import com.suonk.testautomationapp.viewmodels.AutomationViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class AllDevicesFragment : Fragment() {
@@ -242,33 +240,42 @@ class AllDevicesFragment : Fragment() {
         listOfDevices.clear()
 
         viewModel.apply {
-            allLights.observe(viewLifecycleOwner, { lights ->
-                listOfDevices.addAll(lights)
-            })
+            CoroutineScope(Dispatchers.Main).launch {
+                allLights.observe(viewLifecycleOwner, { lights ->
+                    listOfDevices.addAll(lights)
+                    Log.i("prePopulateDatabase", "$lights")
+                })
 
-            allHeaters.observe(viewLifecycleOwner, { heaters ->
-                listOfDevices.addAll(heaters)
-            })
+                allHeaters.observe(viewLifecycleOwner, { heaters ->
+                    listOfDevices.addAll(heaters)
+                    Log.i("prePopulateDatabase", "$heaters")
+                })
 
-            allRollerShutters.observe(viewLifecycleOwner, { rollerShutters ->
-                listOfDevices.addAll(rollerShutters)
-            })
-        }
+                allRollerShutters.observe(viewLifecycleOwner, { rollerShutters ->
+                    listOfDevices.addAll(rollerShutters)
+                    Log.i("prePopulateDatabase", "$listOfDevices")
+                })
 
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(1500)
+                binding?.deviceListProgressBar?.isVisible = true
+                delay(1500)
+                binding?.deviceListProgressBar?.isVisible = false
 
-            when (sharedPreferences.getString("devices_sort_by", "productType")) {
-                "productType" -> {
-                    listOfDevices.sortBy { device -> device.productType }
-                    binding?.toolbar?.menu?.getItem(0)?.isChecked = true
+                when (sharedPreferences.getString("devices_sort_by", "productType")) {
+                    "productType" -> {
+                        listOfDevices.sortBy { device -> device.productType }
+                        binding?.toolbar?.menu?.getItem(0)?.isChecked = true
+                    }
+                    "deviceName" -> {
+                        listOfDevices.sortBy { device -> device.deviceName }
+                        binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+                    }
                 }
-                "deviceName" -> {
-                    listOfDevices.sortBy { device -> device.deviceName }
-                    binding?.toolbar?.menu?.getItem(1)?.isChecked = true
-                }
+                Log.i(
+                    "prePopulateDatabase", "Avant"
+                )
+                Log.i("listOfDevices", "$listOfDevices")
+                devicesListAdapter.submitList(listOfDevices)
             }
-            devicesListAdapter.submitList(listOfDevices)
         }
     }
 
