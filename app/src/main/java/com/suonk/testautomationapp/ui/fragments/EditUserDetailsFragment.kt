@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentEditUserDetailsBinding
@@ -42,9 +43,8 @@ class EditUserDetailsFragment : Fragment() {
 
     private fun initializeUI() {
         getUserFromDatabase()
-        binding?.saveUserIcon?.setOnClickListener {
-            saveUserClick()
-        }
+        saveUserClick()
+        changeImageClick()
 
         binding?.userEmailValue?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -59,37 +59,50 @@ class EditUserDetailsFragment : Fragment() {
         })
     }
 
-    private fun saveUserClick() {
-        if (checkIfFieldIsEmpty()) {
-            if (checkEmailValidation()) {
-                if (checkPostalCode()) {
-                    viewModel.updateUser(
-                        User(
-                            1,
-                            binding?.userBirthDateValue?.text?.toString()?.toLong()!!,
-                            binding?.userNameValue?.text?.toString()!!,
-                            binding?.userLastNameValue?.text?.toString()!!,
-                            null,
-                            binding?.userPhoneNumberValue?.text?.toString()!!,
-                            binding?.userEmailValue?.text?.toString()!!,
-                            1
-                        )
-                    )
+    //endregion
 
-                    viewModel.updateAddress(
-                        Address(
-                            binding?.userCityValue?.text?.toString()!!,
-                            binding?.userCountryValue?.text?.toString()!!,
-                            binding?.userPostalCodeValue?.text?.toString()?.toInt()!!,
-                            binding?.userAddressValue?.text?.toString()!!,
-                            "",
-                            1
+    //region ============================================ Clicks ============================================
+
+    private fun saveUserClick() {
+        binding?.saveUserIcon?.setOnClickListener {
+            if (checkIfFieldIsEmpty()) {
+                if (checkEmailValidation()) {
+                    if (checkPostalCode()) {
+                        viewModel.updateUser(
+                            User(
+                                1,
+                                binding?.userBirthDateValue?.text?.toString()?.toLong()!!,
+                                binding?.userNameValue?.text?.toString()!!,
+                                binding?.userLastNameValue?.text?.toString()!!,
+                                binding?.userImage?.drawable?.toBitmap(),
+                                binding?.userPhoneNumberValue?.text?.toString()!!,
+                                binding?.userEmailValue?.text?.toString()!!,
+                                1
+                            )
                         )
-                    )
+
+                        viewModel.updateAddress(
+                            Address(
+                                binding?.userCityValue?.text?.toString()!!,
+                                binding?.userCountryValue?.text?.toString()!!,
+                                binding?.userPostalCodeValue?.text?.toString()?.toInt()!!,
+                                binding?.userAddressValue?.text?.toString()!!,
+                                "",
+                                1
+                            )
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.postal_code_is_not_valid),
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
                 } else {
                     Toast.makeText(
                         context,
-                        getString(R.string.postal_code_is_not_valid),
+                        getString(R.string.email_is_not_valid),
                         Toast.LENGTH_LONG
                     )
                         .show()
@@ -97,17 +110,19 @@ class EditUserDetailsFragment : Fragment() {
             } else {
                 Toast.makeText(
                     context,
-                    getString(R.string.email_is_not_valid),
+                    getString(R.string.check_if_fields_empty),
                     Toast.LENGTH_LONG
                 )
                     .show()
             }
-        } else {
-            Toast.makeText(context, getString(R.string.check_if_fields_empty), Toast.LENGTH_LONG)
-                .show()
+            activity?.supportFragmentManager?.popBackStack()
         }
+    }
 
-        activity?.supportFragmentManager?.popBackStack()
+    private fun changeImageClick() {
+        binding?.userImage?.setOnClickListener {
+            (activity as MainActivity).openGalleryForImage(binding?.userImage!!)
+        }
     }
 
     //endregion
@@ -176,10 +191,14 @@ class EditUserDetailsFragment : Fragment() {
             binding?.apply {
                 userNameValue.setText(user.firstName)
                 userLastNameValue.setText(user.lastName)
+
                 userEmailValue.setText(user.email)
                 userPhoneNumberValue.setText(user.phoneNumber)
-                userEmailValue.setText(user.email)
                 userBirthDateValue.setText("${user.birthDate}")
+
+                if (user.img != null) {
+                    userImage.setImageBitmap(user.img)
+                }
             }
         })
 

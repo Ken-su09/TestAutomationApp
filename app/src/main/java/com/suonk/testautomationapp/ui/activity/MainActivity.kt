@@ -1,5 +1,7 @@
 package com.suonk.testautomationapp.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.suonk.testautomationapp.R
@@ -7,12 +9,18 @@ import com.suonk.testautomationapp.databinding.ActivityMainBinding
 import com.suonk.testautomationapp.navigation.Coordinator
 import com.suonk.testautomationapp.navigation.Navigator
 import dagger.hilt.android.AndroidEntryPoint
+import de.hdodenhof.circleimageview.CircleImageView
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val REQUEST_CODE = 102
+    }
+
     private var binding: ActivityMainBinding? = null
+    private lateinit var circleImageView: CircleImageView
 
     @Inject
     lateinit var navigator: Navigator
@@ -49,4 +57,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     //endregion
+
+    fun openGalleryForImage(civ: CircleImageView) {
+        circleImageView = civ
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+            circleImageView.setImageURI(data?.data)
+        }
+    }
 }
