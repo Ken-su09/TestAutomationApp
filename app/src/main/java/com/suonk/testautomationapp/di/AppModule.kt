@@ -1,10 +1,10 @@
 package com.suonk.testautomationapp.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.models.AppDatabase
 import com.suonk.testautomationapp.models.dao.AddressDao
 import com.suonk.testautomationapp.models.dao.DeviceDao
@@ -27,25 +27,27 @@ class AppModule {
     @Provides
     fun provideAppDatabase(
         @ApplicationContext context: Context,
-        userDao: Provider<UserDao>,
-        deviceDao: Provider<DeviceDao>,
-        addressDao: Provider<AddressDao>
+        userDaoProvider: Provider<UserDao>,
+        deviceDaoProvider: Provider<DeviceDao>,
+        addressDaoProvider: Provider<AddressDao>
     ) =
         Room.databaseBuilder(
             context, AppDatabase::class.java, "app_database"
         )
-            .allowMainThreadQueries()
-            .addMigrations()
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     CoroutineScope(Dispatchers.IO).launch {
                         prePopulateDatabase(
-                            userDao.get(),
-                            deviceDao.get(),
-                            addressDao.get()
+                            userDaoProvider.get(),
+                            deviceDaoProvider.get(),
+                            addressDaoProvider.get()
                         )
                     }
+                }
+
+                override fun onOpen(db: SupportSQLiteDatabase) {
+                    super.onOpen(db)
                 }
 
                 private suspend fun prePopulateDatabase(
@@ -53,7 +55,7 @@ class AppModule {
                     deviceDao: DeviceDao,
                     addressDao: AddressDao
                 ) {
-                    //region ========================================= User =========================================
+                    //region ===================================== User =====================================
 
                     addressDao.addNewAddress(
                         Address(
@@ -72,49 +74,64 @@ class AppModule {
                             "Doe",
                             null,
                             "456-509(1313)",
-                            "john.doe@hotmail.com"
+                            "john.doe@hotmail.com",
+                            1
                         )
+                    )
+
+                    Log.i(
+                        "prePopulateDatabase", "${
+                            User(
+                                1,
+                                813766371000,
+                                "John",
+                                "Doe",
+                                null,
+                                "456-509(1313)",
+                                "john.doe@hotmail.com",
+                                1
+                            )
+                        }"
                     )
 
                     //endregion
 
-                    //region ======================================== Devices =======================================
+                    //region ==================================== Devices ===================================
 
                     deviceDao.apply {
 
-                        // Light
-                        addNewLight(
+                        val listOfLights = listOf(
                             Light(
                                 "Lampe - Cuisine",
                                 "Light",
                                 50,
-                                "ON"
-                            )
-                        )
-                        addNewLight(
+                                "ON",
+                                1
+                            ),
                             Light(
                                 "Lampe - Salon",
                                 "Light",
                                 100,
-                                "ON"
-                            )
-                        )
-                        addNewLight(
+                                "ON",
+                                4
+                            ),
                             Light(
                                 "Lampe - Salle de bain",
                                 "Light",
                                 36,
-                                "ON"
-                            )
-                        )
-                        addNewLight(
+                                "ON",
+                                10
+                            ),
                             Light(
                                 "Lampe - Grenier",
                                 "Light",
                                 0,
-                                "ON"
+                                "ON",
+                                7
                             )
                         )
+
+                        insertAllLights(listOfLights)
 
                         // Roller Shutter
                         addNewRollerShutter(
@@ -179,12 +196,25 @@ class AppModule {
                                 19
                             )
                         )
+
+
+                        Log.i(
+                            "prePopulateDatabase", "${
+                                Heater(
+                                    "Radiateur - WC",
+                                    "Heater",
+                                    "ON",
+                                    19
+                                )
+                            }"
+                        )
                     }
 
                     //endregion
                 }
             })
-            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .addMigrations()
             .build()
 
     @Provides

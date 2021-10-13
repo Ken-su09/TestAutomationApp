@@ -52,44 +52,29 @@ class UserFragment : Fragment() {
 
     private fun getUserFromDatabase() {
         viewModel.user.observe(viewLifecycleOwner, { user ->
-            binding?.apply {
-                userNameValue.text = "${user.firstName} ${user.lastName}"
-                userEmailValue.text = user.email
+            if (user != null) {
+                binding?.apply {
+                    userNameValue.text = "${user.firstName} ${user.lastName}"
+                    userEmailValue.text = user.email
 
-                userPhoneNumberValue.text = user.phoneNumber
-                userBirthDateValue.text = user.birthDate.toString()
+                    userPhoneNumberValue.text = user.phoneNumber
+                    userBirthDateValue.text = user.birthDate.toString()
 
-                if (user.img != null) {
-                    userImage.setImageBitmap(user.img)
+                    if (user.img != null) {
+                        userImage.setImageBitmap(user.img)
+                    }
                 }
             }
         })
 
         viewModel.address.observe(viewLifecycleOwner, { address ->
-            binding?.apply {
-                userAddressValue.text =
-                    "${address.streetCode} ${address.street}, ${address.postalCode}"
-                userCityValue.text = address.city
-                userCountryValue.text = address.country
-            }
-        })
-
-        viewModel.userAndAddress(1).observe(viewLifecycleOwner, { userAndAddress ->
-            val user = userAndAddress.user
-            val address = userAndAddress.address
-
-            binding?.apply {
-                userNameValue.text = "${user.firstName} ${user.lastName}"
-                userEmailValue.text = user.email
-                userPhoneNumberValue.text = user.phoneNumber
-                userEmailValue.text = user.email
-                userBirthDateValue.text = user.birthDate.toString()
-                userEmailValue.text = user.email
-
-                userAddressValue.text =
-                    "${address.streetCode} ${address.street}, ${address.postalCode}"
-                userCityValue.text = address.city
-                userCountryValue.text = address.country
+            if (address != null) {
+                binding?.apply {
+                    userAddressValue.text =
+                        "${address.streetCode} ${address.street}, ${address.postalCode}"
+                    userCityValue.text = address.city
+                    userCountryValue.text = address.country
+                }
             }
         })
     }
