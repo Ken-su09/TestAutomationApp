@@ -8,9 +8,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_left_arrow" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/save_device_icon"
@@ -20,6 +27,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_save" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/device_mode_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/mode_on_off"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/device_mode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/device_mode"
@@ -41,12 +61,38 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_light" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/roller_shutter_position_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/save_device_icon"
+            tools:text="Position : 50" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/roller_shutter_position_seek_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="450dp"
+            android:layout_height="20dp"
+            android:progressBackgroundTint="@color/white"
+            android:rotation="90"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/device_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/data_device_seek_bar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_margin="30dp"
+            android:progressBackgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/device_icon" />
@@ -57,6 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/data_device_seek_bar"
@@ -69,6 +116,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

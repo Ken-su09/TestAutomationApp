@@ -17,11 +17,12 @@
     <string name="only_roller_shutter">Only Roller Shutter</string>
     <string name="check_if_fields_empty">Fields should not be empty</string>
     <string name="email_is_not_valid">Email is not valid</string>
-    <string name="postal_code_is_not_valid">Le code postal n`\est pas valide</string>
-    <string name="intensity_device">\"Intensité : \"</string>
+    <string name="postal_code_is_not_valid">Postal Code is not valid</string>
+    <string name="intensity_device">Intensity : </string>
     <string name="temperature_device">"Temperature : "</string>
     <string name="alert_dialog_title">You gonna loose your changes !</string>
     <string name="alert_dialog_message">Are you sure ?</string>
     <string name="alert_dialog_positive_button">Yes</string>
     <string name="alert_dialog_negative_button">Cancel</string>
+    <string name="mode_on_off">Mode On/Off</string>
 </resources>
