@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentEditUserDetailsBinding
 import com.suonk.testautomationapp.models.data.Address
@@ -27,6 +28,9 @@ class EditUserDetailsFragment : Fragment() {
 
     private var binding: FragmentEditUserDetailsBinding? = null
     private val viewModel: AutomationViewModel by activityViewModels()
+
+    private lateinit var currentUser: User
+    private lateinit var currentAddress: Address
 
     //endregion
 
@@ -45,6 +49,7 @@ class EditUserDetailsFragment : Fragment() {
         getUserFromDatabase()
         saveUserClick()
         changeImageClick()
+        backClick()
 
         binding?.userEmailValue?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -119,6 +124,28 @@ class EditUserDetailsFragment : Fragment() {
         }
     }
 
+    private fun backClick() {
+        binding?.apply {
+            back.setOnClickListener {
+                if (checkIfUserHasBeenEdited()) {
+                    MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
+                        .setTitle(getString(R.string.alert_dialog_title))
+                        .setMessage(getString(R.string.alert_dialog_message))
+                        .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
+                            activity?.supportFragmentManager?.popBackStack()
+                        }
+                        .setNegativeButton(getString(R.string.alert_dialog_negative_button)) { dialogInterface, _ ->
+                            dialogInterface.cancel()
+                            dialogInterface.dismiss()
+                        }
+                        .show()
+                } else {
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+            }
+        }
+    }
+
     private fun changeImageClick() {
         binding?.userImage?.setOnClickListener {
             (activity as MainActivity).openGalleryForImage(binding?.userImage!!)
@@ -184,10 +211,26 @@ class EditUserDetailsFragment : Fragment() {
         }
     }
 
+    private fun checkIfUserHasBeenEdited(): Boolean {
+        return currentUser.firstName != binding?.userNameValue?.text.toString() ||
+                currentUser.lastName != binding?.userLastNameValue?.text.toString() ||
+
+                currentUser.email != binding?.userEmailValue?.text.toString() ||
+                currentUser.phoneNumber != binding?.userPhoneNumberValue?.text.toString() ||
+                currentUser.birthDate.toString() != binding?.userBirthDateValue?.text.toString() ||
+                currentUser.img != binding?.userImage?.drawable?.toBitmap() ||
+
+                currentAddress.postalCode.toString() != binding?.userPostalCodeValue?.text.toString() ||
+                currentAddress.city != binding?.userCityValue?.text.toString() ||
+                "${currentAddress.streetCode} ${currentAddress.street}" != binding?.userAddressValue?.text.toString() ||
+                currentAddress.country != binding?.userCountryValue?.text.toString()
+    }
+
     //endregion
 
     private fun getUserFromDatabase() {
         viewModel.user.observe(viewLifecycleOwner, { user ->
+            currentUser = user
             binding?.apply {
                 userNameValue.setText(user.firstName)
                 userLastNameValue.setText(user.lastName)
@@ -203,6 +246,7 @@ class EditUserDetailsFragment : Fragment() {
         })
 
         viewModel.address.observe(viewLifecycleOwner, { address ->
+            currentAddress = address
             binding?.apply {
                 userAddressValue.setText("${address.streetCode} ${address.street}")
                 userPostalCodeValue.setText("${address.postalCode}")
