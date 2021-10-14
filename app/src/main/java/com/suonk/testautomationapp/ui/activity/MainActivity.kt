@@ -1,24 +1,14 @@
 package com.suonk.testautomationapp.ui.activity
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
-import com.suonk.testautomationapp.R
+import androidx.appcompat.app.AppCompatActivity
 import com.suonk.testautomationapp.databinding.ActivityMainBinding
 import com.suonk.testautomationapp.navigation.Coordinator
 import com.suonk.testautomationapp.navigation.Navigator
-import com.suonk.testautomationapp.viewmodels.AutomationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
