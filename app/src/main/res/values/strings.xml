@@ -25,4 +25,6 @@
     <string name="alert_dialog_positive_button">Yes</string>
     <string name="alert_dialog_negative_button">Cancel</string>
     <string name="mode_on_off">Mode On/Off</string>
+    <string name="delete_mode">Delete mode</string>
+    <string name="delete_device_title">Delete device</string>
 </resources>

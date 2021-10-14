@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentAllDevicesBinding
 import com.suonk.testautomationapp.models.data.Device
@@ -57,8 +59,7 @@ class AllDevicesFragment : Fragment() {
     //region ============================================== UI ==============================================
 
     private fun initializeUI() {
-        devicesListAdapter = DevicesListAdapter(activity as MainActivity, this)
-
+        devicesListAdapter = DevicesListAdapter(activity as MainActivity, this, false)
 
         sharedPreferences = (activity as MainActivity).getSharedPreferences(
             "devices_sort_by",
@@ -67,6 +68,7 @@ class AllDevicesFragment : Fragment() {
 
         initRecyclerView()
         initToolbar()
+        deleteToolbarClick()
     }
 
     private fun initRecyclerView() {
@@ -172,6 +174,12 @@ class AllDevicesFragment : Fragment() {
                     menuItem.isChecked = true
                     true
                 }
+                R.id.delete_mode -> {
+                    binding?.toolbar?.visibility = View.INVISIBLE
+                    binding?.deleteToolbar?.isVisible = true
+                    getDevicesListDeleteMode(true)
+                    true
+                }
                 else -> {
                     super.onOptionsItemSelected(menuItem)
                     true
@@ -180,10 +188,56 @@ class AllDevicesFragment : Fragment() {
         }
     }
 
+    private fun deleteToolbarClick() {
+        binding?.deleteToolbarCancel?.setOnClickListener {
+            binding?.toolbar?.visibility = View.VISIBLE
+            binding?.deleteToolbar?.visibility = View.GONE
+            getDevicesListDeleteMode(false)
+        }
+    }
+
+    //endregion
+
+    fun navigateToDeviceDetails(position: Int) {
+        viewModel.setDevice(listOfDevices[position])
+        (activity as MainActivity).startDeviceDetails()
+    }
+
+    fun deleteDevice(position: Int) {
+        val device = listOfDevices[position]
+
+        MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
+            .setTitle(getString(R.string.delete_device_title))
+            .setMessage(getString(R.string.alert_dialog_message))
+            .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
+                listOfDevices.clear()
+                viewModel.deleteDevice(device)
+                getDevicesListDeleteMode(true)
+            }
+            .setNegativeButton(getString(R.string.alert_dialog_negative_button)) { dialogInterface, _ ->
+                dialogInterface.cancel()
+                dialogInterface.dismiss()
+            }
+            .show()
+    }
+
+    //region ========================================== getDevices ==========================================
+
+    private fun getDevicesListDeleteMode(deleteMode: Boolean) {
+        devicesListAdapter.submitList(null)
+        devicesListAdapter = DevicesListAdapter(activity as MainActivity, this, deleteMode)
+
+        binding?.deviceRecyclerView?.apply {
+            this.adapter = devicesListAdapter
+            getDevicesListFromDatabase()
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(activity as MainActivity, 2)
+        }
+    }
+
     private fun getDeviceListFilterText() {
         binding?.searchDeviceEditText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(searchBarText: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -218,66 +272,36 @@ class AllDevicesFragment : Fragment() {
         })
     }
 
-    //endregion
-
-    fun navigateToDeviceDetails(position: Int) {
-        when (listOfDevices[position].productType) {
-            "Light" -> {
-                viewModel.setLight(listOfDevices[position] as Light)
-            }
-            "Heater" -> {
-                viewModel.setHeater(listOfDevices[position] as Heater)
-            }
-            "RollerShutter" -> {
-                viewModel.setRollerShutter(listOfDevices[position] as RollerShutter)
-            }
-        }
-        viewModel.setProductType(listOfDevices[position].productType)
-        (activity as MainActivity).startDeviceDetails()
-    }
-
     private fun getDevicesListFromDatabase() {
         listOfDevices.clear()
 
         viewModel.apply {
-            CoroutineScope(Dispatchers.Main).launch {
-                allLights.observe(viewLifecycleOwner, { lights ->
-                    listOfDevices.addAll(lights)
-                    Log.i("prePopulateDatabase", "$lights")
-                })
+            allDevices.observe(viewLifecycleOwner, { devices ->
+                listOfDevices.addAll(devices)
+                Log.i("prePopulateDatabase", "$listOfDevices")
 
-                allHeaters.observe(viewLifecycleOwner, { heaters ->
-                    listOfDevices.addAll(heaters)
-                    Log.i("prePopulateDatabase", "$heaters")
-                })
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding?.deviceListProgressBar?.isVisible = true
+                    delay(1500)
+                    binding?.deviceListProgressBar?.isVisible = false
 
-                allRollerShutters.observe(viewLifecycleOwner, { rollerShutters ->
-                    listOfDevices.addAll(rollerShutters)
-                    Log.i("prePopulateDatabase", "$listOfDevices")
-                })
-
-                binding?.deviceListProgressBar?.isVisible = true
-                delay(1500)
-                binding?.deviceListProgressBar?.isVisible = false
-
-                when (sharedPreferences.getString("devices_sort_by", "productType")) {
-                    "productType" -> {
-                        listOfDevices.sortBy { device -> device.productType }
-                        binding?.toolbar?.menu?.getItem(0)?.isChecked = true
+                    when (sharedPreferences.getString("devices_sort_by", "productType")) {
+                        "productType" -> {
+                            listOfDevices.sortBy { device -> device.productType }
+                            binding?.toolbar?.menu?.getItem(0)?.isChecked = true
+                        }
+                        "deviceName" -> {
+                            listOfDevices.sortBy { device -> device.deviceName }
+                            binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+                        }
                     }
-                    "deviceName" -> {
-                        listOfDevices.sortBy { device -> device.deviceName }
-                        binding?.toolbar?.menu?.getItem(1)?.isChecked = true
-                    }
+                    devicesListAdapter.submitList(listOfDevices)
                 }
-                Log.i(
-                    "prePopulateDatabase", "Avant"
-                )
-                Log.i("listOfDevices", "$listOfDevices")
-                devicesListAdapter.submitList(listOfDevices)
-            }
+            })
         }
     }
+
+    //endregion
 
     override fun onDestroyView() {
         super.onDestroyView()

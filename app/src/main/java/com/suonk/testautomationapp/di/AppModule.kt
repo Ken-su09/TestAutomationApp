@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import com.suonk.testautomationapp.models.AppDatabase
 import com.suonk.testautomationapp.models.dao.DeviceDao
 import com.suonk.testautomationapp.models.dao.UserDao
@@ -17,6 +20,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.InputStream
 import javax.inject.Provider
 
 @Module
@@ -32,6 +36,8 @@ class AppModule {
         Room.databaseBuilder(
             context, AppDatabase::class.java, "app_database"
         )
+            .allowMainThreadQueries()
+            .addMigrations()
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -43,9 +49,38 @@ class AppModule {
                     }
                 }
 
-                override fun onOpen(db: SupportSQLiteDatabase) {
-                    super.onOpen(db)
-                }
+//                override fun onOpen(db: SupportSQLiteDatabase) {
+//                    super.onOpen(db)
+//
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        val json = try {
+//                            val inputStream: InputStream = context.assets.open("modulo_tech.json")
+//                            inputStream.bufferedReader().use {
+//                                it.readText()
+//                            }
+//                        } catch (ex: Exception) {
+//                            ex.localizedMessage
+//                            ""
+//                        }
+//                        val jsonObj = JsonParser().parse(json).asJsonObject
+//
+//                        val userType = object : TypeToken<User>() {}.type
+//                        val user: User = Gson().fromJson(jsonObj, userType)
+//
+//                        val devicesType = object : TypeToken<Device>() {}.type
+//                        val user: User = Gson().fromJson(jsonObj, userType)
+//
+//                        populateDatabase(
+//                            database,
+//                            company
+//                        )
+//
+//                        prePopulateDatabase(
+//                            userDaoProvider.get(),
+//                            deviceDaoProvider.get()
+//                        )
+//                    }
+//                }
 
                 private suspend fun prePopulateDatabase(
                     userDao: UserDao,
@@ -72,148 +107,104 @@ class AppModule {
                         )
                     )
 
-                    Log.i(
-                        "prePopulateDatabase", "${
-                            User(
-                                Address(
-                                    "Issy-les-Moulineaux",
-                                    "France",
-                                    92130,
-                                    "rue Michelet",
-                                    "2B"
-                                ),
-                                813766371000,
-                                "John",
-                                "Doe",
-                                null,
-                                "456-509(1313)",
-                                "john.doe@hotmail.com",
-                                1
-                            )
-                        }"
-                    )
-
                     //endregion
 
                     //region ==================================== Devices ===================================
 
                     deviceDao.apply {
-
-                        val listOfLights = listOf(
-                            Light(
+                        val listOfDevices = listOf(
+                            Device(
                                 "Lampe - Cuisine",
                                 "Light",
-                                50,
-                                "ON",
-                                1
+                                null,
+                                Light("ON", 50),
+                                null
                             ),
-                            Light(
-                                "Lampe - Salon",
-                                "Light",
-                                100,
-                                "ON",
-                                4
-                            ),
-                            Light(
-                                "Lampe - Salle de bain",
-                                "Light",
-                                36,
-                                "ON",
-                                10
-                            ),
-                            Light(
-                                "Lampe - Grenier",
-                                "Light",
-                                0,
-                                "ON",
-                                7
-                            )
-                        )
-
-                        insertAllLights(listOfLights)
-
-                        // Roller Shutter
-                        addNewRollerShutter(
-                            RollerShutter(
+                            Device(
                                 "Volet roulant - Salon",
                                 "RollerShutter",
-                                70
-                            )
-                        )
-                        addNewRollerShutter(
-                            RollerShutter(
-                                "Volet roulant",
-                                "RollerShutter",
-                                0
-                            )
-                        )
-                        addNewRollerShutter(
-                            RollerShutter(
-                                "Volet roulant - Salle de bain",
-                                "RollerShutter",
-                                70
-                            )
-                        )
-                        addNewRollerShutter(
-                            RollerShutter(
-                                "Volet roulant",
-                                "RollerShutter",
-                                33
-                            )
-                        )
-
-                        // Heater
-                        addNewHeater(
-                            Heater(
+                                null,
+                                null,
+                                RollerShutter(70)
+                            ),
+                            Device(
                                 "Radiateur - Chambre",
                                 "Heater",
-                                "OFF",
-                                20
-                            )
-                        )
-                        addNewHeater(
-                            Heater(
+                                Heater("OFF", 20),
+                                null,
+                                null
+                            ),
+                            Device(
+                                "Lampe - Salon",
+                                "Light",
+                                null,
+                                Light("ON", 100),
+                                null
+                            ),
+                            Device(
+                                "Volet roulant",
+                                "RollerShutter",
+                                null,
+                                null,
+                                RollerShutter(0)
+                            ),
+                            Device(
                                 "Radiateur - Salon",
                                 "Heater",
-                                "OFF",
-                                18
-                            )
-                        )
-                        addNewHeater(
-                            Heater(
+                                Heater("OFF", 18),
+                                null,
+                                null
+                            ),
+                            Device(
+                                "Lampe - Grenier",
+                                "Light",
+                                null,
+                                Light("ON", 0),
+                                null
+                            ),
+                            Device(
+                                "Volet roulant - Salle de bain",
+                                "RollerShutter",
+                                null,
+                                null,
+                                RollerShutter(70)
+                            ),
+                            Device(
                                 "Radiateur - Salle de bain",
                                 "Heater",
-                                "OFF",
-                                20
-                            )
-                        )
-                        addNewHeater(
-                            Heater(
+                                Heater("OFF", 20),
+                                null,
+                                null
+                            ),
+                            Device(
+                                "Lampe - Salle de bain",
+                                "Light",
+                                null,
+                                Light("ON", 36),
+                                null
+                            ),
+                            Device(
+                                "Volet roulant",
+                                "RollerShutter",
+                                null,
+                                null,
+                                RollerShutter(33)
+                            ),
+                            Device(
                                 "Radiateur - WC",
                                 "Heater",
-                                "ON",
-                                19
+                                Heater("ON", 19),
+                                null,
+                                null
                             )
                         )
-
-
-                        Log.i(
-                            "prePopulateDatabase", "${
-                                Heater(
-                                    "Radiateur - WC",
-                                    "Heater",
-                                    "ON",
-                                    19
-                                )
-                            }"
-                        )
+                        addAllDevices(listOfDevices)
                     }
 
                     //endregion
                 }
             })
-            .allowMainThreadQueries()
-            .addMigrations()
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides

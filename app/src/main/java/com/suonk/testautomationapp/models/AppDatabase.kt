@@ -9,7 +9,7 @@ import com.suonk.testautomationapp.models.data.*
 import com.suonk.testautomationapp.utils.Converters
 
 @Database(
-    entities = [User::class, Light::class, RollerShutter::class, Heater::class],
+    entities = [User::class, Device::class],
     version = 3,
     exportSchema = false
 )

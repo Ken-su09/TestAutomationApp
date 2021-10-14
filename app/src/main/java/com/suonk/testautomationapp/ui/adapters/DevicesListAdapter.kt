@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,7 +15,11 @@ import com.suonk.testautomationapp.databinding.ItemDeviceBinding
 import com.suonk.testautomationapp.models.data.Device
 import com.suonk.testautomationapp.ui.fragments.main_pages.AllDevicesFragment
 
-class DevicesListAdapter(private val activity: Activity, private val fragment: Fragment) :
+class DevicesListAdapter(
+    private val activity: Activity,
+    private val fragment: Fragment,
+    private var deleteMode: Boolean
+) :
     ListAdapter<Device, DevicesListAdapter.ViewHolder>(DevicesComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,7 +29,6 @@ class DevicesListAdapter(private val activity: Activity, private val fragment: F
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val device = getItem(position)
-        Log.i("deviceData", "$device")
         holder.onBind(device, position)
     }
 
@@ -33,9 +37,6 @@ class DevicesListAdapter(private val activity: Activity, private val fragment: F
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(device: Device, position: Int) {
-
-            Log.i("deviceData", "${device.deviceName}")
-
             binding.deviceName.text = device.deviceName
 
             when (device.productType) {
@@ -68,6 +69,13 @@ class DevicesListAdapter(private val activity: Activity, private val fragment: F
                 }
             }
 
+            binding.deviceDelete.isVisible = deleteMode
+            binding.root.isEnabled = !deleteMode
+            binding.root.isClickable = !deleteMode
+            binding.deviceDelete.setOnClickListener {
+                (fragment as AllDevicesFragment).deleteDevice(position)
+            }
+
             binding.root.setOnClickListener {
                 (fragment as AllDevicesFragment).navigateToDeviceDetails(position)
             }
@@ -81,7 +89,11 @@ class DevicesListAdapter(private val activity: Activity, private val fragment: F
 
         override fun areContentsTheSame(oldItem: Device, newItem: Device): Boolean {
             return oldItem.deviceName == newItem.deviceName &&
-                    oldItem.productType == newItem.productType
+                    oldItem.productType == newItem.productType &&
+                    oldItem.heater == newItem.heater &&
+                    oldItem.light == newItem.light &&
+                    oldItem.rollerShutter == newItem.rollerShutter
+
         }
     }
 }

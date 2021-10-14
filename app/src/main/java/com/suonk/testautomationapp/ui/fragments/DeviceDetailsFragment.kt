@@ -18,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentDeviceDetailsBinding
+import com.suonk.testautomationapp.models.data.Device
 import com.suonk.testautomationapp.models.data.Heater
 import com.suonk.testautomationapp.models.data.Light
 import com.suonk.testautomationapp.models.data.RollerShutter
@@ -40,6 +41,7 @@ class DeviceDetailsFragment : Fragment() {
     private var currentMode = ""
     private var currentPosition = 0
     private var currentId = -1
+    private var currentDeviceName = ""
 
     //endregion
 
@@ -240,37 +242,45 @@ class DeviceDetailsFragment : Fragment() {
                 viewModel.apply {
                     when (productT) {
                         "Light" -> {
-                            Log.i(
-                                "LightMode",
-                                "Mode : $currentMode"
-                            )
-                            updateLight(
-                                Light(
-                                    currentLight.deviceName,
-                                    currentLight.productType,
-                                    dataDeviceSeekBar.progress,
-                                    currentMode,
+                            updateDevice(
+                                Device(
+                                    currentDeviceName,
+                                    productT,
+                                    null,
+                                    Light(
+                                        currentMode,
+                                        dataDeviceSeekBar.progress
+                                    ),
+                                    null,
                                     currentId
                                 )
                             )
                         }
                         "Heater" -> {
-                            updateHeater(
-                                Heater(
-                                    currentHeater.deviceName,
-                                    currentHeater.productType,
-                                    currentMode,
-                                    dataDeviceSeekBar.progress,
+                            updateDevice(
+                                Device(
+                                    currentDeviceName,
+                                    productT,
+                                    Heater(
+                                        currentMode,
+                                        dataDeviceSeekBar.progress
+                                    ),
+                                    null,
+                                    null,
                                     currentId
                                 )
                             )
                         }
                         "RollerShutter" -> {
-                            updateRollerShutter(
-                                RollerShutter(
-                                    currentRollerShutter.deviceName,
-                                    currentRollerShutter.productType,
-                                    rollerShutterPositionSeekBar.progress,
+                            updateDevice(
+                                Device(
+                                    currentDeviceName,
+                                    productT,
+                                    null,
+                                    null,
+                                    RollerShutter(
+                                        rollerShutterPositionSeekBar.progress
+                                    ),
                                     currentId
                                 )
                             )
@@ -471,112 +481,104 @@ class DeviceDetailsFragment : Fragment() {
 
     private fun getDeviceFromViewModel() {
         viewModel.apply {
-            productType.observe(viewLifecycleOwner, { productType ->
-                productT = productType
-                when (productType) {
+            device.observe(viewLifecycleOwner, { device ->
+                productT = device.productType
+                currentId = device.id
+                currentDeviceName = device.deviceName
+
+                when (productT) {
                     "Light" -> {
-                        light.observe(viewLifecycleOwner, { light ->
-                            currentLight = light
-                            currentId = light.id
-                            binding?.apply {
-                                deviceName.text = light.deviceName
-                                if (light.mode == "ON") {
-                                    checkSeekBarIntensityProgression(light.intensity)
-                                    deviceMode.isChecked = true
-                                } else {
-                                    deviceIcon.setImageDrawable(
-                                        ResourcesCompat.getDrawable(
-                                            (activity as MainActivity).resources,
-                                            R.drawable.ic_light_off,
-                                            null
-                                        )
-                                    )
-                                    deviceMode.isChecked = false
-                                }
+                        currentLight = device.light!!
+                        currentMode = currentLight.mode
 
-                                currentMode = light.mode
-
-                                dataDeviceSeekBar.apply {
-                                    progress = light.intensity
-                                    min = 0
-                                    max = 100
-                                    incrementProgressBy(1)
-                                }
-                                intensityTemperatureDeviceValue.text =
-                                    getString(R.string.intensity_device) + light.intensity
-                            }
-                        })
-                    }
-                    "RollerShutter" -> {
-                        rollerShutter.observe(viewLifecycleOwner, { rollerShutter ->
-                            currentRollerShutter = rollerShutter
-                            currentPosition = rollerShutter.position
-                            currentId = rollerShutter.id
-
-                            binding?.apply {
+                        binding?.apply {
+                            deviceName.text = device.deviceName
+                            if (currentLight.mode == "ON") {
+                                checkSeekBarIntensityProgression(currentLight.intensity)
+                                deviceMode.isChecked = true
+                            } else {
                                 deviceIcon.setImageDrawable(
                                     ResourcesCompat.getDrawable(
                                         (activity as MainActivity).resources,
-                                        R.drawable.ic_roller_shutter,
+                                        R.drawable.ic_light_off,
                                         null
                                     )
                                 )
-
-                                deviceMode.isVisible = false
-                                deviceModeTitle.isVisible = false
-                                dataDeviceSeekBar.isVisible = false
-
-                                rollerShutterPositionSeekBar.apply {
-                                    isVisible = true
-                                    min = 0
-                                    max = 100
-                                    incrementProgressBy(1)
-                                    progress = rollerShutter.position
-                                }
-
-                                checkSeekBarPositionProgression(rollerShutter.position)
-                                deviceName.text = rollerShutter.deviceName
-
-                                rollerShutterPositionValue.text =
-                                    "Position : ${rollerShutter.position}"
+                                deviceMode.isChecked = false
                             }
-                        })
+
+                            dataDeviceSeekBar.apply {
+                                progress = currentLight.intensity
+                                min = 0
+                                max = 100
+                                incrementProgressBy(1)
+                            }
+                            intensityTemperatureDeviceValue.text =
+                                getString(R.string.intensity_device) + currentLight.intensity
+                        }
+                    }
+                    "RollerShutter" -> {
+                        currentRollerShutter = device.rollerShutter!!
+                        currentPosition = currentRollerShutter.position
+
+                        binding?.apply {
+                            deviceIcon.setImageDrawable(
+                                ResourcesCompat.getDrawable(
+                                    (activity as MainActivity).resources,
+                                    R.drawable.ic_roller_shutter,
+                                    null
+                                )
+                            )
+
+                            deviceMode.isVisible = false
+                            deviceModeTitle.isVisible = false
+                            dataDeviceSeekBar.isVisible = false
+
+                            rollerShutterPositionSeekBar.apply {
+                                isVisible = true
+                                min = 0
+                                max = 100
+                                incrementProgressBy(1)
+                                progress = currentRollerShutter.position
+                            }
+
+                            checkSeekBarPositionProgression(currentRollerShutter.position)
+
+                            rollerShutterPositionValue.text =
+                                "Position : ${currentRollerShutter.position}"
+                        }
                     }
                     "Heater" -> {
-                        heater.observe(viewLifecycleOwner, { heater ->
-                            currentHeater = heater
-                            currentId = heater.id
-                            binding?.apply {
-                                deviceName.text = heater.deviceName
-                                if (heater.mode == "ON") {
-                                    checkSeekBarTemperatureProgression(heater.temperature.toDouble())
-                                    deviceMode.isChecked = true
-                                } else {
-                                    checkSeekBarTemperatureProgression(heater.temperature.toDouble())
-                                    deviceIcon.setImageDrawable(
-                                        ResourcesCompat.getDrawable(
-                                            (activity as MainActivity).resources,
-                                            R.drawable.ic_heater_off,
-                                            null
-                                        )
+                        currentHeater = device.heater!!
+                        binding?.apply {
+                            if (currentHeater.mode == "ON") {
+                                checkSeekBarTemperatureProgression(currentHeater.temperature.toDouble())
+                                deviceMode.isChecked = true
+                            } else {
+                                checkSeekBarTemperatureProgression(currentHeater.temperature.toDouble())
+                                deviceIcon.setImageDrawable(
+                                    ResourcesCompat.getDrawable(
+                                        (activity as MainActivity).resources,
+                                        R.drawable.ic_heater_off,
+                                        null
                                     )
-                                    deviceMode.isChecked = false
-                                }
-
-                                currentMode = heater.mode
-
-                                intensityTemperatureDeviceValue.text =
-                                    getString(R.string.temperature_device) +
-                                            heater.temperature.toDouble() + "°C"
-
-                                dataDeviceSeekBar.apply {
-                                    progress = heater.temperature * 2
-                                    min = 14
-                                    max = 56
-                                    incrementProgressBy(1)
-                                }
+                                )
+                                deviceMode.isChecked = false
                             }
-                        })
+
+                            currentMode = currentHeater.mode
+
+                            intensityTemperatureDeviceValue.text =
+                                getString(R.string.temperature_device) +
+                                        currentHeater.temperature.toDouble() + "°C"
+
+                            dataDeviceSeekBar.apply {
+                                progress = currentHeater.temperature * 2
+                                min = 14
+                                max = 56
+                                incrementProgressBy(1)
+                            }
+                        }
                     }
                 }
             })

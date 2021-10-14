@@ -11,13 +11,13 @@
     <string name="user_country">PAYS</string>
 
     <string name="sort_by_product_type">Tri par type de produit</string>
-    <string name="sort_by_device_name">Tri par nom de l\`appareil</string>
+    <string name="sort_by_device_name">Tri par nom de l\'appareil</string>
     <string name="only_light">Seulement les lumières</string>
     <string name="only_heaters">Seulement les chauffages</string>
     <string name="only_roller_shutter">Seulement les Volets roulants</string>
     <string name="check_if_fields_empty">Les champs ne doivent pas être vides</string>
-    <string name="email_is_not_valid">L`\email n`\est pas valide</string>
-    <string name="postal_code_is_not_valid">Le code postal n`\est pas valide</string>
+    <string name="email_is_not_valid">L`\email n\'est pas valide</string>
+    <string name="postal_code_is_not_valid">Le code postal n\'est pas valide</string>
     <string name="intensity_device">Intensité : </string>
     <string name="temperature_device">"Température : "</string>
     <string name="alert_dialog_title">Vous allez perdre vos modifications !</string>
@@ -25,4 +25,6 @@
     <string name="alert_dialog_positive_button">Oui</string>
     <string name="alert_dialog_negative_button">Annuler</string>
     <string name="mode_on_off">Mode On/Off</string>
+    <string name="delete_mode">Mode Suppression</string>
+    <string name="delete_device_title">Suppression d\'un appareil</string>
 </resources>

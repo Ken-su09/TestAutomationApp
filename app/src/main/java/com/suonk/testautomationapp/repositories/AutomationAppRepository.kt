@@ -11,31 +11,19 @@ class AutomationAppRepository @Inject constructor(
     private val deviceDao: DeviceDao
 ) {
 
-    //region ============================================ Devices ===========================================
-
-    val allLights = deviceDao.getAllLights()
-    val allHeaters = deviceDao.getAllHeaters()
-    val allRollerShutters = deviceDao.getAllRollerShutters()
-
-    suspend fun updateLight(light: Light) = deviceDao.updateLight(light)
-    suspend fun updateHeater(heater: Heater) = deviceDao.updateHeater(heater)
-    suspend fun updateRollerShutter(rs: RollerShutter) = deviceDao.updateRollerShutter(rs)
-
-    suspend fun deleteLight(light: Light) = deviceDao.deleteLight(light)
-    suspend fun deleteHeater(heater: Heater) = deviceDao.deleteHeater(heater)
-    suspend fun deleteRollerShutter(rs: RollerShutter) = deviceDao.deleteRollerShutter(rs)
-
-    //endregion
-
-    //region ======================================= User and Address =======================================
-
+    val allDevices = deviceDao.getAllDevices()
     val user = userDao.getUser()
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    suspend fun updateDevice(device: Device) = deviceDao.updateDevice(device)
+
+    @WorkerThread
+    suspend fun deleteDevice(device: Device) = deviceDao.deleteDevice(device)
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun updateUser(user: User) {
         userDao.updateUser(user)
     }
-
-    //endregion
 }

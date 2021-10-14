@@ -17,37 +17,19 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
 
     //region ============================================ Devices ===========================================
 
-    val allLights = repository.allLights.asLiveData()
-    val allHeaters = repository.allHeaters.asLiveData()
-    val allRollerShutters = repository.allRollerShutters.asLiveData()
+    val allDevices = repository.allDevices.asLiveData()
 
-    fun updateLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
-        repository.updateLight(light)
+    fun updateDevice(device: Device) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateDevice(device)
     }
 
-    fun updateHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
-        repository.updateHeater(heater)
-    }
-
-    fun updateRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
-        repository.updateRollerShutter(rs)
-    }
-
-    fun deleteLight(light: Light) = viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteLight(light)
-    }
-
-    fun deleteHeater(heater: Heater) = viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteHeater(heater)
-    }
-
-    fun deleteRollerShutter(rs: RollerShutter) = viewModelScope.launch(Dispatchers.IO) {
-        repository.deleteRollerShutter(rs)
+    fun deleteDevice(device: Device) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteDevice(device)
     }
 
     //endregion
 
-    //region ======================================= User and Address =======================================
+    //region ============================================= User =============================================
 
     val user = repository.user.asLiveData()
 
@@ -59,24 +41,9 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
 
     //region ==================================== Data Between Fragments ====================================
 
-    val productType = MutableLiveData<String>()
-    fun setProductType(pt: String) {
-        productType.value = pt
-    }
-
-    val light = MutableLiveData<Light>()
-    fun setLight(l: Light) {
-        light.value = l
-    }
-
-    val rollerShutter = MutableLiveData<RollerShutter>()
-    fun setRollerShutter(rs: RollerShutter) {
-        rollerShutter.value = rs
-    }
-
-    val heater = MutableLiveData<Heater>()
-    fun setHeater(h: Heater) {
-        heater.value = h
+    val device = MutableLiveData<Device>()
+    fun setDevice(d: Device) {
+        device.value = d
     }
 
     //endregion

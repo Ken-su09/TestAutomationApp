@@ -9,6 +9,16 @@
     android:focusable="true">
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/device_delete"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_red_cross_selector" />
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/device_icon"
         android:layout_width="60dp"
         android:layout_height="80dp"

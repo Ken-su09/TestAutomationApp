@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
     private lateinit var circleImageView: CircleImageView
 
-    private val viewModel: AutomationViewModel by viewModels()
-
     @Inject
     lateinit var navigator: Navigator
     private lateinit var coordinator: Coordinator
@@ -44,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         navigator.activity = this
         coordinator = Coordinator(navigator)
-//        getDevicesListFromDatabase()
         startSplashScreen()
     }
 
@@ -67,36 +64,7 @@ class MainActivity : AppCompatActivity() {
         coordinator.showEditUserDetails()
     }
 
-    private fun refresh() {
-        finish()
-        startActivity(Intent(this@MainActivity, MainActivity::class.java))
-    }
-
     //endregion
-
-    private fun getDevicesListFromDatabase() {
-        val sharedPreferences = getSharedPreferences("isPrepopulate", Context.MODE_PRIVATE)
-        val isPrepopulate = sharedPreferences.getBoolean("isPrepopulate", false)
-        if (!isPrepopulate) {
-            viewModel.apply {
-                CoroutineScope(Dispatchers.Main).launch {
-                    allLights.observe(this@MainActivity, { lights ->
-                    })
-
-                    allHeaters.observe(this@MainActivity, { heaters ->
-                    })
-
-                    allRollerShutters.observe(this@MainActivity, { rollerShutters ->
-                    })
-                }
-            }
-            refresh()
-            val edit = sharedPreferences.edit()
-            edit.putBoolean("isPrepopulate", true)
-            edit.apply()
-            Log.i("prePopulateDatabase", "$isPrepopulate")
-        }
-    }
 
     fun openGalleryForImage(civ: CircleImageView) {
         circleImageView = civ
