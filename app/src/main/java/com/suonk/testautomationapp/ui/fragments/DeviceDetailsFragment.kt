@@ -42,6 +42,7 @@ class DeviceDetailsFragment : Fragment() {
     private var currentPosition = 0
     private var currentId = -1
     private var currentDeviceName = ""
+    private var currentTemperature = 0.0
 
     //endregion
 
@@ -263,7 +264,7 @@ class DeviceDetailsFragment : Fragment() {
                                     productT,
                                     Heater(
                                         currentMode,
-                                        dataDeviceSeekBar.progress
+                                        (dataDeviceSeekBar.progress.toDouble() / 2).toInt()
                                     ),
                                     null,
                                     null,
@@ -465,7 +466,7 @@ class DeviceDetailsFragment : Fragment() {
             }
             "Heater" -> {
                 currentHeater.mode != currentMode ||
-                        currentHeater.temperature != binding?.dataDeviceSeekBar?.progress
+                        currentTemperature != binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2
 
             }
             "RollerShutter" -> {
@@ -550,6 +551,9 @@ class DeviceDetailsFragment : Fragment() {
                     }
                     "Heater" -> {
                         currentHeater = device.heater!!
+                        currentMode = currentHeater.mode
+                        currentTemperature = currentHeater.temperature.toDouble()
+
                         binding?.apply {
                             if (currentHeater.mode == "ON") {
                                 checkSeekBarTemperatureProgression(currentHeater.temperature.toDouble())
@@ -566,11 +570,8 @@ class DeviceDetailsFragment : Fragment() {
                                 deviceMode.isChecked = false
                             }
 
-                            currentMode = currentHeater.mode
-
                             intensityTemperatureDeviceValue.text =
-                                getString(R.string.temperature_device) +
-                                        currentHeater.temperature.toDouble() + "°C"
+                                getString(R.string.temperature_device) + currentTemperature + "°C"
 
                             dataDeviceSeekBar.apply {
                                 progress = currentHeater.temperature * 2
