@@ -10,23 +10,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.suonk.testautomationapp.R
 import com.suonk.testautomationapp.databinding.FragmentAllDevicesBinding
 import com.suonk.testautomationapp.models.data.Device
-import com.suonk.testautomationapp.models.data.Heater
-import com.suonk.testautomationapp.models.data.Light
-import com.suonk.testautomationapp.models.data.RollerShutter
 import com.suonk.testautomationapp.ui.activity.MainActivity
 import com.suonk.testautomationapp.ui.adapters.DevicesListAdapter
 import com.suonk.testautomationapp.viewmodels.AutomationViewModel
@@ -44,6 +35,9 @@ class AllDevicesFragment : Fragment() {
     private var listOfDevices = mutableListOf<Device>()
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesFirstTime: SharedPreferences
+
+    private val listOfOnlyDevices = mutableListOf<Device>()
 
     //endregion
 
@@ -66,6 +60,11 @@ class AllDevicesFragment : Fragment() {
             Context.MODE_PRIVATE
         )
 
+        sharedPreferencesFirstTime = (activity as MainActivity).getSharedPreferences(
+            "isDatabasePrepopulate",
+            Context.MODE_PRIVATE
+        )
+
         initRecyclerView()
         initToolbar()
         deleteToolbarClick()
@@ -81,7 +80,7 @@ class AllDevicesFragment : Fragment() {
     }
 
     private fun initToolbar() {
-        getDeviceListFilterText()
+        getDevicesListFilterText()
 
         binding?.toolbar?.inflateMenu(R.menu.devices_toolbar_menu)
         binding?.toolbar?.overflowIcon = ResourcesCompat.getDrawable(
@@ -92,85 +91,27 @@ class AllDevicesFragment : Fragment() {
         binding?.toolbar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.sort_by_product_type -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        devicesListAdapter.submitList(null)
-                        launchProgressBarSpin(1500)
-                        listOfDevices.sortBy { device -> device.productType }
-                        devicesListAdapter.submitList(listOfDevices)
-                    }
-                    val edit = sharedPreferences.edit()
-                    edit.putString("devices_sort_by", "productType")
-                    edit.apply()
+                    getDevicesFilterByProductType("productType")
                     menuItem.isChecked = true
                     true
                 }
                 R.id.sort_by_device_name -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        devicesListAdapter.submitList(null)
-                        launchProgressBarSpin(1500)
-                        listOfDevices.sortBy { device -> device.deviceName }
-                        devicesListAdapter.submitList(listOfDevices)
-                    }
-                    val edit = sharedPreferences.edit()
-                    edit.putString("devices_sort_by", "deviceName")
-                    edit.apply()
+                    getDevicesFilterByProductType("deviceName")
                     menuItem.isChecked = true
                     true
                 }
                 R.id.only_light -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        devicesListAdapter.submitList(null)
-                        launchProgressBarSpin(1500)
-                        val listOfLights = mutableListOf<Device>()
-                        for (i in listOfDevices.indices) {
-                            if (listOfDevices[i].productType == "Light") {
-                                listOfLights.add(listOfDevices[i])
-                            }
-                        }
-                        listOfLights.sortBy { device -> device.deviceName }
-                        devicesListAdapter.submitList(listOfLights)
-                    }
-                    val edit = sharedPreferences.edit()
-                    edit.putString("devices_sort_by", "only_light")
-                    edit.apply()
+                    getOnlyDevicesFilterByProductType("Light")
                     menuItem.isChecked = true
                     true
                 }
                 R.id.only_heater -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        devicesListAdapter.submitList(null)
-                        launchProgressBarSpin(1500)
-                        val listOfLights = mutableListOf<Device>()
-                        for (i in listOfDevices.indices) {
-                            if (listOfDevices[i].productType == "Heater") {
-                                listOfLights.add(listOfDevices[i])
-                            }
-                        }
-                        listOfLights.sortBy { device -> device.deviceName }
-                        devicesListAdapter.submitList(listOfLights)
-                    }
-                    val edit = sharedPreferences.edit()
-                    edit.putString("devices_sort_by", "only_heater")
-                    edit.apply()
+                    getOnlyDevicesFilterByProductType("Heater")
                     menuItem.isChecked = true
                     true
                 }
                 R.id.only_roller_shutter -> {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        devicesListAdapter.submitList(null)
-                        launchProgressBarSpin(1500)
-                        val listOfLights = mutableListOf<Device>()
-                        for (i in listOfDevices.indices) {
-                            if (listOfDevices[i].productType == "RollerShutter") {
-                                listOfLights.add(listOfDevices[i])
-                            }
-                        }
-                        listOfLights.sortBy { device -> device.deviceName }
-                        devicesListAdapter.submitList(listOfLights)
-                    }
-                    val edit = sharedPreferences.edit()
-                    edit.putString("devices_sort_by", "only_roller_shutter")
-                    edit.apply()
+                    getOnlyDevicesFilterByProductType("RollerShutter")
                     menuItem.isChecked = true
                     true
                 }
@@ -188,19 +129,26 @@ class AllDevicesFragment : Fragment() {
         }
     }
 
+    //endregion
+
+    fun navigateToDeviceDetails(position: Int) {
+        if (listOfOnlyDevices.isEmpty()) {
+            viewModel.setDevice(listOfDevices[position])
+            (activity as MainActivity).startDeviceDetails()
+        } else {
+            viewModel.setDevice(listOfOnlyDevices[position])
+            (activity as MainActivity).startDeviceDetails()
+        }
+    }
+
+    //region ======================================= Delete Device(s) =======================================
+
     private fun deleteToolbarClick() {
         binding?.deleteToolbarCancel?.setOnClickListener {
             binding?.toolbar?.visibility = View.VISIBLE
             binding?.deleteToolbar?.visibility = View.GONE
             getDevicesListDeleteMode(false)
         }
-    }
-
-    //endregion
-
-    fun navigateToDeviceDetails(position: Int) {
-        viewModel.setDevice(listOfDevices[position])
-        (activity as MainActivity).startDeviceDetails()
     }
 
     fun deleteDevice(position: Int) {
@@ -210,9 +158,10 @@ class AllDevicesFragment : Fragment() {
             .setTitle(getString(R.string.delete_device_title) + " : " + device.deviceName)
             .setMessage(getString(R.string.alert_dialog_message))
             .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
+                viewModel.deleteDevice(device)
                 listOfDevices.clear()
                 devicesListAdapter.submitList(null)
-                viewModel.deleteDevice(device)
+
                 getDevicesListDeleteMode(true)
             }
             .setNegativeButton(getString(R.string.alert_dialog_negative_button)) { dialogInterface, _ ->
@@ -222,19 +171,21 @@ class AllDevicesFragment : Fragment() {
             .show()
     }
 
-    //region ========================================== getDevices ==========================================
-
     private fun getDevicesListDeleteMode(deleteMode: Boolean) {
         devicesListAdapter = DevicesListAdapter(activity as MainActivity, this, deleteMode)
         binding?.deviceRecyclerView?.apply {
             this.adapter = devicesListAdapter
-            getDevicesListFromDatabase(5000)
+            getDevicesListFromDatabase(2000)
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(activity as MainActivity, 2)
         }
     }
 
-    private fun getDeviceListFilterText() {
+    // endregion
+
+    //region ========================================== getDevices ==========================================
+
+    private fun getDevicesListFilterText() {
         binding?.searchDeviceEditText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -271,38 +222,164 @@ class AllDevicesFragment : Fragment() {
         })
     }
 
+    private fun getOnlyDevicesFilterByProductType(productType: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            devicesListAdapter.submitList(null)
+            listOfOnlyDevices.clear()
+            binding?.searchDeviceEditText?.text?.clear()
+            launchProgressBarSpin(1500)
+            for (i in listOfDevices.indices) {
+                if (listOfDevices[i].productType == productType) {
+                    listOfOnlyDevices.add(listOfDevices[i])
+                }
+            }
+            listOfOnlyDevices.sortBy { device -> device.deviceName }
+            devicesListAdapter.submitList(listOfOnlyDevices)
+        }
+    }
+
+    private fun getDevicesFilterByProductType(filterBy: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            devicesListAdapter.submitList(null)
+            listOfOnlyDevices.clear()
+            binding?.searchDeviceEditText?.text?.clear()
+            launchProgressBarSpin(1500)
+            if (filterBy == "deviceName") {
+                listOfDevices.sortBy { device -> device.deviceName }
+            } else {
+                listOfDevices.sortBy { device -> device.productType }
+            }
+            devicesListAdapter.submitList(listOfDevices)
+            val edit = sharedPreferences.edit()
+            edit.putString("devices_sort_by", filterBy)
+            edit.apply()
+        }
+    }
+
     private fun getDevicesListFromDatabase(time: Long) {
         viewModel.apply {
             allDevices.observe(viewLifecycleOwner, { devices ->
-                listOfDevices.clear()
-                listOfDevices.addAll(devices)
-                Log.i("prePopulateDatabase", "$listOfDevices")
-
                 CoroutineScope(Dispatchers.Main).launch {
-                    Log.i("launchProgressBarSpin", "Finally")
+                    listOfDevices.clear()
                     binding?.deviceRecyclerView?.isVisible = false
                     launchProgressBarSpin(time)
-                    binding?.deviceRecyclerView?.isVisible = true
 
-                    when (sharedPreferences.getString("devices_sort_by", "productType")) {
-                        "productType" -> {
-                            listOfDevices.sortBy { device -> device.productType }
-                            binding?.toolbar?.menu?.getItem(0)?.isChecked = true
+                    listOfDevices.addAll(devices)
+
+                    Log.i("isListEmpty", "devices : ${devices.size}")
+                    Log.i("isListEmpty", "listOfDevices : ${listOfDevices.size}")
+
+                    if (listOfDevices.isEmpty() && devices.isEmpty()) {
+                        Log.i("isListEmpty", "True")
+                        for (i in 1..12) {
+                            viewModel.getDeviceById(i).observe(viewLifecycleOwner, { device ->
+                                if (device != null) {
+                                    listOfDevices.add(device)
+
+                                    when (sharedPreferences.getString(
+                                        "devices_sort_by", "productType"
+                                    )) {
+                                        "productType" -> {
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                launchProgressBarSpin(1500)
+                                                binding?.deviceRecyclerView?.isVisible = true
+                                                devicesListAdapter.submitList(null)
+                                                listOfDevices.sortBy { deviceSort -> deviceSort.productType }
+                                                binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+                                                devicesListAdapter.submitList(listOfDevices)
+                                            }
+                                        }
+                                        "deviceName" -> {
+                                            CoroutineScope(Dispatchers.Main).launch {
+                                                launchProgressBarSpin(1500)
+                                                binding?.deviceRecyclerView?.isVisible = true
+                                                devicesListAdapter.submitList(null)
+                                                listOfDevices.sortBy { deviceSort -> deviceSort.deviceName }
+                                                binding?.toolbar?.menu?.getItem(2)?.isChecked = true
+                                                devicesListAdapter.submitList(listOfDevices)
+                                            }
+                                        }
+                                    }
+                                }
+                            })
                         }
-                        "deviceName" -> {
-                            listOfDevices.sortBy { device -> device.deviceName }
-                            binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+                    } else {
+                        Log.i("isListEmpty", "False")
+                        when (sharedPreferences.getString("devices_sort_by", "productType")) {
+                            "productType" -> {
+                                binding?.deviceRecyclerView?.isVisible = true
+                                listOfDevices.sortBy { device -> device.productType }
+                                binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+                                devicesListAdapter.submitList(listOfDevices)
+                            }
+                            "deviceName" -> {
+                                binding?.deviceRecyclerView?.isVisible = true
+                                listOfDevices.sortBy { device -> device.deviceName }
+                                binding?.toolbar?.menu?.getItem(2)?.isChecked = true
+                                devicesListAdapter.submitList(listOfDevices)
+                            }
                         }
                     }
-                    devicesListAdapter.submitList(listOfDevices)
                 }
             })
+
+
+//            if (!sharedPreferencesFirstTime.getBoolean("isDatabasePrepopulate", false)) {
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    listOfDevices.clear()
+//                    binding?.deviceRecyclerView?.isVisible = false
+//                    launchProgressBarSpin(time)
+//
+//                    Log.i("isListEmpty", "${listOfDevices.size}")
+//
+//                    if (listOfDevices.isEmpty() && listOfDevices.size <= 12) {
+//                        for (i in 1..12) {
+//                            viewModel.getDeviceById(i).observe(viewLifecycleOwner, { device ->
+//                                if (device != null) {
+//                                    listOfDevices.add(device)
+//
+//                                    when (sharedPreferences.getString(
+//                                        "devices_sort_by", "productType"
+//                                    )) {
+//                                        "productType" -> {
+//                                            CoroutineScope(Dispatchers.Main).launch {
+//                                                launchProgressBarSpin(1500)
+//                                                binding?.deviceRecyclerView?.isVisible = true
+//                                                devicesListAdapter.submitList(null)
+//                                                listOfDevices.sortBy { deviceSort -> deviceSort.productType }
+//                                                binding?.toolbar?.menu?.getItem(1)?.isChecked = true
+//                                                devicesListAdapter.submitList(listOfDevices)
+//                                            }
+//                                        }
+//                                        "deviceName" -> {
+//                                            CoroutineScope(Dispatchers.Main).launch {
+//                                                binding?.deviceRecyclerView?.isVisible = false
+//                                                launchProgressBarSpin(1500)
+//                                                binding?.deviceRecyclerView?.isVisible = true
+//                                                devicesListAdapter.submitList(null)
+//                                                listOfDevices.sortBy { deviceSort -> deviceSort.deviceName }
+//                                                binding?.toolbar?.menu?.getItem(2)?.isChecked = true
+//                                                devicesListAdapter.submitList(listOfDevices)
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            })
+//                        }
+//                    }
+//                }
+//
+//                val edit = sharedPreferencesFirstTime.edit()
+//                edit.putBoolean("isDatabasePrepopulate", true)
+//                edit.apply()
+//                Log.i("isDatabasePrepopulate", "true")
+//            }
         }
     }
 
     //endregion
 
-    private suspend fun launchProgressBarSpin(time: Long){
+    private suspend fun launchProgressBarSpin(time: Long) {
         binding?.deviceListProgressBar?.isVisible = true
         delay(time)
         binding?.deviceListProgressBar?.isVisible = false

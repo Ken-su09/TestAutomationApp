@@ -3,6 +3,7 @@ package com.suonk.testautomationapp.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.suonk.testautomationapp.databinding.ActivityMainBinding
 import com.suonk.testautomationapp.navigation.Coordinator
@@ -68,5 +69,9 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
             circleImageView.setImageURI(data?.data)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
