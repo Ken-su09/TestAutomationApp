@@ -124,7 +124,7 @@ class EditUserDetailsFragment : Fragment() {
             back.setOnClickListener {
                 if (checkIfUserHasBeenEdited()) {
                     MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
-                        .setTitle(getString(R.string.alert_dialog_title))
+                        .setTitle(getString(R.string.alert_dialog_title_back))
                         .setMessage(getString(R.string.alert_dialog_message))
                         .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
                             activity?.supportFragmentManager?.popBackStack()

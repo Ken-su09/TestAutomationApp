@@ -20,11 +20,13 @@
     <string name="postal_code_is_not_valid">Le code postal n\'est pas valide</string>
     <string name="intensity_device">Intensité : </string>
     <string name="temperature_device">"Température : "</string>
-    <string name="alert_dialog_title">Vous allez perdre vos modifications !</string>
+    <string name="alert_dialog_title_back">Vous allez perdre vos modifications !</string>
+    <string name="alert_dialog_title_save">Vous allez sauvegarder vos modifications !</string>
     <string name="alert_dialog_message">Êtes-vous sûr ?</string>
     <string name="alert_dialog_positive_button">Oui</string>
     <string name="alert_dialog_negative_button">Annuler</string>
     <string name="mode_on_off">Mode On/Off</string>
     <string name="delete_mode">Mode Suppression</string>
     <string name="delete_device_title">Suppression d\'un appareil</string>
+    <string name="edit_devices_no_changes">Vous n\'avez pas modifié votre appareil, vous ne pouvez pas sauvegarder</string>
 </resources>

@@ -1,16 +1,12 @@
 package com.suonk.testautomationapp.ui.fragments
 
-import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.SeekBar
-import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatSeekBar
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -43,6 +39,8 @@ class DeviceDetailsFragment : Fragment() {
     private var currentId = -1
     private var currentDeviceName = ""
     private var currentTemperature = 0.0
+
+    private var myFromUser = false
 
     //endregion
 
@@ -121,6 +119,7 @@ class DeviceDetailsFragment : Fragment() {
         binding?.dataDeviceSeekBar?.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                myFromUser = fromUser
                 if (fromUser) {
                     when (productT) {
                         "Light" -> {
@@ -220,7 +219,7 @@ class DeviceDetailsFragment : Fragment() {
             back.setOnClickListener {
                 if (checkIfDeviceHasBeenEdited()) {
                     MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
-                        .setTitle(getString(R.string.alert_dialog_title))
+                        .setTitle(getString(R.string.alert_dialog_title_back))
                         .setMessage(getString(R.string.alert_dialog_message))
                         .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
                             activity?.supportFragmentManager?.popBackStack()
@@ -240,57 +239,75 @@ class DeviceDetailsFragment : Fragment() {
     private fun saveDeviceClick() {
         binding?.apply {
             saveDeviceIcon.setOnClickListener {
-                viewModel.apply {
-                    when (productT) {
-                        "Light" -> {
-                            updateDevice(
-                                Device(
-                                    currentDeviceName,
-                                    productT,
-                                    null,
-                                    Light(
-                                        currentMode,
-                                        dataDeviceSeekBar.progress
-                                    ),
-                                    null,
-                                    currentId
-                                )
-                            )
+                if (checkIfDeviceHasBeenEdited()) {
+                    MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
+                        .setTitle(getString(R.string.alert_dialog_title_save))
+                        .setMessage(getString(R.string.alert_dialog_message))
+                        .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
+                            viewModel.apply {
+                                when (productT) {
+                                    "Light" -> {
+                                        updateDevice(
+                                            Device(
+                                                currentDeviceName,
+                                                productT,
+                                                null,
+                                                Light(
+                                                    currentMode,
+                                                    dataDeviceSeekBar.progress
+                                                ),
+                                                null,
+                                                currentId
+                                            )
+                                        )
+                                    }
+                                    "Heater" -> {
+                                        updateDevice(
+                                            Device(
+                                                currentDeviceName,
+                                                productT,
+                                                Heater(
+                                                    currentMode,
+                                                    (dataDeviceSeekBar.progress.toDouble() / 2).toInt()
+                                                ),
+                                                null,
+                                                null,
+                                                currentId
+                                            )
+                                        )
+                                    }
+                                    "RollerShutter" -> {
+                                        updateDevice(
+                                            Device(
+                                                currentDeviceName,
+                                                productT,
+                                                null,
+                                                null,
+                                                RollerShutter(
+                                                    rollerShutterPositionSeekBar.progress
+                                                ),
+                                                currentId
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                            (activity as MainActivity).apply {
+                                supportFragmentManager.popBackStack()
+                                supportFragmentManager.beginTransaction()
+                            }
                         }
-                        "Heater" -> {
-                            updateDevice(
-                                Device(
-                                    currentDeviceName,
-                                    productT,
-                                    Heater(
-                                        currentMode,
-                                        (dataDeviceSeekBar.progress.toDouble() / 2).toInt()
-                                    ),
-                                    null,
-                                    null,
-                                    currentId
-                                )
-                            )
+                        .setNegativeButton(getString(R.string.alert_dialog_negative_button)) { dialogInterface, _ ->
+                            dialogInterface.cancel()
+                            dialogInterface.dismiss()
                         }
-                        "RollerShutter" -> {
-                            updateDevice(
-                                Device(
-                                    currentDeviceName,
-                                    productT,
-                                    null,
-                                    null,
-                                    RollerShutter(
-                                        rollerShutterPositionSeekBar.progress
-                                    ),
-                                    currentId
-                                )
-                            )
-                        }
-                    }
-                }
-                (activity as MainActivity).apply {
-                    supportFragmentManager.popBackStack()
-                    supportFragmentManager.beginTransaction()
+                        .show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.edit_devices_no_changes),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -459,18 +476,44 @@ class DeviceDetailsFragment : Fragment() {
     //endregion
 
     private fun checkIfDeviceHasBeenEdited(): Boolean {
+        when (productT) {
+            "Light" -> {
+                Log.i("checkIfDeviceEdited", "${currentLight.intensity}")
+                Log.i("checkIfDeviceEdited", "${binding?.dataDeviceSeekBar?.progress}")
+            }
+            "Heater" -> {
+                Log.i("checkIfDeviceEdited", "${currentTemperature}")
+                Log.i(
+                    "checkIfDeviceEdited",
+                    "${binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2}"
+                )
+                Log.i("checkIfDeviceEdited", "${myFromUser}")
+            }
+            "RollerShutter" -> {
+                Log.i("checkIfDeviceEdited", "${currentPosition}")
+                Log.i("checkIfDeviceEdited", "${binding?.rollerShutterPositionSeekBar?.progress}")
+                currentRollerShutter.position != currentPosition
+            }
+            else -> {
+            }
+        }
+
         return when (productT) {
             "Light" -> {
                 currentLight.mode != currentMode ||
                         currentLight.intensity != binding?.dataDeviceSeekBar?.progress
             }
             "Heater" -> {
-                currentHeater.mode != currentMode ||
-                        currentTemperature != binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2
+                if (!myFromUser) {
+                    myFromUser
+                } else {
+                    currentHeater.mode != currentMode ||
+                            currentTemperature != binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2
+                }
 
             }
             "RollerShutter" -> {
-                currentRollerShutter.position != currentPosition
+                binding?.rollerShutterPositionSeekBar?.progress != currentPosition
             }
             else -> {
                 false
