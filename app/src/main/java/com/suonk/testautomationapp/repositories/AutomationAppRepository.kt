@@ -12,6 +12,7 @@ class AutomationAppRepository @Inject constructor(
 ) {
 
     val allDevices = deviceDao.getAllDevices()
+    fun getDeviceById(id: Int) = deviceDao.getDeviceById(id)
     val user = userDao.getUser()
 
     @Suppress("RedundantSuspendModifier")

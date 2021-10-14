@@ -17,6 +17,12 @@ interface DeviceDao {
     fun getAllDevices(): Flow<List<Device>>
 
     /**
+     * getDeviceById(id) = device1
+     */
+    @Query("SELECT * FROM device_db WHERE id = :deviceId")
+    fun getDeviceById(deviceId: Int): Flow<Device>
+
+    /**
      * updateDevice(device)
      */
     @Update

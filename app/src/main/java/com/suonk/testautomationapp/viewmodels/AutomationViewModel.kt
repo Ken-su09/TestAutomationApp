@@ -18,6 +18,7 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
     //region ============================================ Devices ===========================================
 
     val allDevices = repository.allDevices.asLiveData()
+    fun getDeviceById(id: Int) = repository.getDeviceById(id).asLiveData()
 
     fun updateDevice(device: Device) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateDevice(device)

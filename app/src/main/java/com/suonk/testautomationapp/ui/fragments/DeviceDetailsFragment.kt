@@ -476,32 +476,14 @@ class DeviceDetailsFragment : Fragment() {
     //endregion
 
     private fun checkIfDeviceHasBeenEdited(): Boolean {
-        when (productT) {
-            "Light" -> {
-                Log.i("checkIfDeviceEdited", "${currentLight.intensity}")
-                Log.i("checkIfDeviceEdited", "${binding?.dataDeviceSeekBar?.progress}")
-            }
-            "Heater" -> {
-                Log.i("checkIfDeviceEdited", "${currentTemperature}")
-                Log.i(
-                    "checkIfDeviceEdited",
-                    "${binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2}"
-                )
-                Log.i("checkIfDeviceEdited", "${myFromUser}")
-            }
-            "RollerShutter" -> {
-                Log.i("checkIfDeviceEdited", "${currentPosition}")
-                Log.i("checkIfDeviceEdited", "${binding?.rollerShutterPositionSeekBar?.progress}")
-                currentRollerShutter.position != currentPosition
-            }
-            else -> {
-            }
-        }
-
         return when (productT) {
             "Light" -> {
-                currentLight.mode != currentMode ||
-                        currentLight.intensity != binding?.dataDeviceSeekBar?.progress
+                if (!myFromUser) {
+                    myFromUser
+                } else {
+                    currentLight.mode != currentMode ||
+                            currentLight.intensity != binding?.dataDeviceSeekBar?.progress
+                }
             }
             "Heater" -> {
                 if (!myFromUser) {
@@ -510,7 +492,6 @@ class DeviceDetailsFragment : Fragment() {
                     currentHeater.mode != currentMode ||
                             currentTemperature != binding?.dataDeviceSeekBar?.progress?.toDouble()!! / 2
                 }
-
             }
             "RollerShutter" -> {
                 binding?.rollerShutterPositionSeekBar?.progress != currentPosition
@@ -529,6 +510,7 @@ class DeviceDetailsFragment : Fragment() {
                 productT = device.productType
                 currentId = device.id
                 currentDeviceName = device.deviceName
+                binding?.deviceName?.text = currentDeviceName
 
                 when (productT) {
                     "Light" -> {
@@ -536,7 +518,6 @@ class DeviceDetailsFragment : Fragment() {
                         currentMode = currentLight.mode
 
                         binding?.apply {
-                            deviceName.text = device.deviceName
                             if (currentLight.mode == "ON") {
                                 checkSeekBarIntensityProgression(currentLight.intensity)
                                 deviceMode.isChecked = true

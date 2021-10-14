@@ -27,9 +27,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashScreenFragment : Fragment() {
 
     private var binding: FragmentSplashScreenBinding? = null
+    private val viewModel: AutomationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +44,7 @@ class SplashScreenFragment : Fragment() {
 
     private fun initializeUI() {
         appLogoAnimation()
+        getDevicesFromDatabase()
     }
 
     private fun appLogoAnimation() {
@@ -52,8 +55,15 @@ class SplashScreenFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(2750)
-            (activity as MainActivity)?.startMainScreen()
+            (activity as MainActivity).startMainScreen()
             frameAnimation.stop()
+        }
+    }
+
+    private fun getDevicesFromDatabase() {
+        viewModel.apply {
+            allDevices.observe(viewLifecycleOwner, { devices ->
+            })
         }
     }
 
