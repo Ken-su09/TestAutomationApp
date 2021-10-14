@@ -225,25 +225,27 @@ class EditUserDetailsFragment : Fragment() {
 
     private fun getUserFromDatabase() {
         viewModel.user.observe(viewLifecycleOwner, { user ->
-            currentUser = user
-            currentAddress = user.address
+            if(user != null){
+                currentUser = user
+                currentAddress = user.address
 
-            binding?.apply {
-                userNameValue.setText(user.firstName)
-                userLastNameValue.setText(user.lastName)
+                binding?.apply {
+                    userNameValue.setText(user.firstName)
+                    userLastNameValue.setText(user.lastName)
 
-                userEmailValue.setText(user.email)
-                userPhoneNumberValue.setText(user.phoneNumber)
-                userBirthDateValue.setText("${user.birthDate}")
+                    userEmailValue.setText(user.email)
+                    userPhoneNumberValue.setText(user.phoneNumber)
+                    userBirthDateValue.setText("${user.birthDate}")
 
-                if (user.img != null) {
-                    userImage.setImageBitmap(user.img)
+                    if (user.img != null) {
+                        userImage.setImageBitmap(user.img)
+                    }
+
+                    userAddressValue.setText("${user.address.streetCode} ${user.address.street}")
+                    userPostalCodeValue.setText("${user.address.postalCode}")
+                    userCityValue.setText(user.address.city)
+                    userCountryValue.setText(user.address.country)
                 }
-
-                userAddressValue.setText("${user.address.streetCode} ${user.address.street}")
-                userPostalCodeValue.setText("${user.address.postalCode}")
-                userCityValue.setText(user.address.city)
-                userCountryValue.setText(user.address.country)
             }
         })
     }

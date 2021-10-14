@@ -6,18 +6,19 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.suonk.testautomationapp.models.data.*
 import com.suonk.testautomationapp.repositories.AutomationAppRepository
+import com.suonk.testautomationapp.repositories.DefaultRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AutomationViewModel @Inject constructor(private val repository: AutomationAppRepository) :
+class AutomationViewModel @Inject constructor(private val repository: DefaultRepository) :
     ViewModel() {
 
     //region ============================================ Devices ===========================================
 
-    val allDevices = repository.allDevices.asLiveData()
+    val allDevices = repository.getAllDevices().asLiveData()
     fun getDeviceById(id: Int) = repository.getDeviceById(id).asLiveData()
 
     fun updateDevice(device: Device) = viewModelScope.launch(Dispatchers.IO) {
@@ -32,7 +33,7 @@ class AutomationViewModel @Inject constructor(private val repository: Automation
 
     //region ============================================= User =============================================
 
-    val user = repository.user.asLiveData()
+    val user = repository.getUser().asLiveData()
 
     fun updateUser(user: User) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateUser(user)

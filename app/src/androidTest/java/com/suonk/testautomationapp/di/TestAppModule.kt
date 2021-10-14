@@ -22,7 +22,7 @@ import javax.inject.Provider
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class TestAppModule {
 
     @Provides
     fun provideAppDatabase(
@@ -30,8 +30,8 @@ class AppModule {
         userDaoProvider: Provider<UserDao>,
         deviceDaoProvider: Provider<DeviceDao>
     ) =
-        Room.databaseBuilder(
-            context, AppDatabase::class.java, "app_database"
+        Room.inMemoryDatabaseBuilder(
+            context, AppDatabase::class.java
         )
             .allowMainThreadQueries()
             .addMigrations()
@@ -180,7 +180,8 @@ class AppModule {
             .build()
 
     @Provides
-    fun provideRepository(userDao: UserDao, deviceDao: DeviceDao) = AutomationAppRepository(userDao, deviceDao) as DefaultRepository
+    fun provideRepository(userDao: UserDao, deviceDao: DeviceDao) =
+        AutomationAppRepository(userDao, deviceDao) as DefaultRepository
 
     @Provides
     fun provideUserDao(database: AppDatabase) = database.userDao()
