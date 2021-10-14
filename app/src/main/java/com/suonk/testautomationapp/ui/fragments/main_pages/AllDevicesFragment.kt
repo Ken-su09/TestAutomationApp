@@ -74,7 +74,7 @@ class AllDevicesFragment : Fragment() {
     private fun initRecyclerView() {
         binding?.deviceRecyclerView?.apply {
             this.adapter = devicesListAdapter
-            getDevicesListFromDatabase()
+            getDevicesListFromDatabase(1500)
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(activity as MainActivity, 2)
         }
@@ -94,7 +94,7 @@ class AllDevicesFragment : Fragment() {
                 R.id.sort_by_product_type -> {
                     CoroutineScope(Dispatchers.Main).launch {
                         devicesListAdapter.submitList(null)
-                        delay(1500)
+                        launchProgressBarSpin(1500)
                         listOfDevices.sortBy { device -> device.productType }
                         devicesListAdapter.submitList(listOfDevices)
                     }
@@ -107,7 +107,7 @@ class AllDevicesFragment : Fragment() {
                 R.id.sort_by_device_name -> {
                     CoroutineScope(Dispatchers.Main).launch {
                         devicesListAdapter.submitList(null)
-                        delay(1500)
+                        launchProgressBarSpin(1500)
                         listOfDevices.sortBy { device -> device.deviceName }
                         devicesListAdapter.submitList(listOfDevices)
                     }
@@ -120,7 +120,7 @@ class AllDevicesFragment : Fragment() {
                 R.id.only_light -> {
                     CoroutineScope(Dispatchers.Main).launch {
                         devicesListAdapter.submitList(null)
-                        delay(1500)
+                        launchProgressBarSpin(1500)
                         val listOfLights = mutableListOf<Device>()
                         for (i in listOfDevices.indices) {
                             if (listOfDevices[i].productType == "Light") {
@@ -139,7 +139,7 @@ class AllDevicesFragment : Fragment() {
                 R.id.only_heater -> {
                     CoroutineScope(Dispatchers.Main).launch {
                         devicesListAdapter.submitList(null)
-                        delay(1500)
+                        launchProgressBarSpin(1500)
                         val listOfLights = mutableListOf<Device>()
                         for (i in listOfDevices.indices) {
                             if (listOfDevices[i].productType == "Heater") {
@@ -158,7 +158,7 @@ class AllDevicesFragment : Fragment() {
                 R.id.only_roller_shutter -> {
                     CoroutineScope(Dispatchers.Main).launch {
                         devicesListAdapter.submitList(null)
-                        delay(1500)
+                        launchProgressBarSpin(1500)
                         val listOfLights = mutableListOf<Device>()
                         for (i in listOfDevices.indices) {
                             if (listOfDevices[i].productType == "RollerShutter") {
@@ -207,10 +207,11 @@ class AllDevicesFragment : Fragment() {
         val device = listOfDevices[position]
 
         MaterialAlertDialogBuilder(activity as MainActivity, R.style.AlertDialogTheme)
-            .setTitle(getString(R.string.delete_device_title))
+            .setTitle(getString(R.string.delete_device_title) + " : " + device.deviceName)
             .setMessage(getString(R.string.alert_dialog_message))
             .setPositiveButton(getString(R.string.alert_dialog_positive_button)) { _, _ ->
                 listOfDevices.clear()
+                devicesListAdapter.submitList(null)
                 viewModel.deleteDevice(device)
                 getDevicesListDeleteMode(true)
             }
@@ -224,12 +225,10 @@ class AllDevicesFragment : Fragment() {
     //region ========================================== getDevices ==========================================
 
     private fun getDevicesListDeleteMode(deleteMode: Boolean) {
-        devicesListAdapter.submitList(null)
         devicesListAdapter = DevicesListAdapter(activity as MainActivity, this, deleteMode)
-
         binding?.deviceRecyclerView?.apply {
             this.adapter = devicesListAdapter
-            getDevicesListFromDatabase()
+            getDevicesListFromDatabase(5000)
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(activity as MainActivity, 2)
         }
@@ -272,18 +271,18 @@ class AllDevicesFragment : Fragment() {
         })
     }
 
-    private fun getDevicesListFromDatabase() {
-        listOfDevices.clear()
-
+    private fun getDevicesListFromDatabase(time: Long) {
         viewModel.apply {
             allDevices.observe(viewLifecycleOwner, { devices ->
+                listOfDevices.clear()
                 listOfDevices.addAll(devices)
                 Log.i("prePopulateDatabase", "$listOfDevices")
 
                 CoroutineScope(Dispatchers.Main).launch {
-                    binding?.deviceListProgressBar?.isVisible = true
-                    delay(1500)
-                    binding?.deviceListProgressBar?.isVisible = false
+                    Log.i("launchProgressBarSpin", "Finally")
+                    binding?.deviceRecyclerView?.isVisible = false
+                    launchProgressBarSpin(time)
+                    binding?.deviceRecyclerView?.isVisible = true
 
                     when (sharedPreferences.getString("devices_sort_by", "productType")) {
                         "productType" -> {
@@ -302,6 +301,12 @@ class AllDevicesFragment : Fragment() {
     }
 
     //endregion
+
+    private suspend fun launchProgressBarSpin(time: Long){
+        binding?.deviceListProgressBar?.isVisible = true
+        delay(time)
+        binding?.deviceListProgressBar?.isVisible = false
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
